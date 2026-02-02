@@ -176,10 +176,10 @@ export default function Home() {
 			/>
 
 			{/* Content */}
-			<div className="relative z-10 max-w-4xl mx-auto px-4 pt-2 pb-8">
+			<div className="relative z-10 max-w-4xl mx-auto px-4 pb-4">
 				{/* Header */}
-				<div className="text-center mb-10">
-					<div className="flex justify-center mb-6">
+				<div className="text-center mb-4">
+					<div className="flex justify-center mb-3">
 						<a
 							href="https://imagineteam.com/"
 							target="_blank"
@@ -203,9 +203,9 @@ export default function Home() {
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
 					{/* Messages Area */}
-					<div className={`p-4 sm:p-5 space-y-4 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
+					<div className={`p-3 sm:p-4 space-y-3 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
 						{allMessages.length === 0 && (
-							<div className="text-center py-4 sm:py-5">
+							<div className="text-center py-3 sm:py-4">
 								<h3 className="text-xl font-medium text-gray-700 mb-3">
 									How can we help your practice?
 								</h3>
@@ -411,9 +411,21 @@ export default function Home() {
 				</div>
 
 				{/* Footer */}
-				<p className="text-center text-black text-sm mt-8">
-					Powered by ImagineOne<sup>&reg;</sup> &mdash; Intelligent Revenue Cycle Management System
-				</p>
+				<div className="flex justify-center mt-4">
+					<a
+						href="https://imagineteam.com/imagineone/#form"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md"
+					>
+						<img
+							src="/favicon.png"
+							alt=""
+							className="w-6 h-6"
+						/>
+						Schedule a Demo
+					</a>
+				</div>
 			</div>
 		</div>
 	);
