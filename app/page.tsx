@@ -373,7 +373,7 @@ export default function Home() {
 									rows={3}
 								/>
 							</div>
-							<div className="flex gap-3 sm:flex-col sm:w-[100px] lg:flex-row lg:w-auto">
+							<div className="flex gap-3 sm:flex-col sm:w-[120px]">
 								<button
 									type="submit"
 									disabled={isLoading || !input.trim()}
