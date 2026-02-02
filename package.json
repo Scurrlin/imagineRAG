@@ -1,0 +1,53 @@
+{
+	"name": "imagine-software-rag",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"test": "jest",
+		"upload-documents": "npx ts-node app/scripts/upload-documents.ts",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix"
+		]
+	},
+	"dependencies": {
+		"@ai-sdk/openai": "^3.0.25",
+		"@qdrant/js-client-rest": "^1.16.2",
+		"@tailwindcss/postcss": "^4.1.18",
+		"ai": "^6.0.67",
+		"cohere-ai": "^7.17.1",
+		"dotenv": "^17.2.3",
+		"husky": "^9.1.7",
+		"lucide-react": "^0.514.0",
+		"next": "^15.5.11",
+		"openai": "5.15.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.2.3",
+		"react-markdown": "^10.1.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3",
+		"@types/jest": "30.0.0",
+		"@types/node": "24.0.0",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"autoprefixer": "^10.4.21",
+		"eslint": "^9",
+		"eslint-config-next": "^15.5.11",
+		"jest": "30.0.0",
+		"jest-environment-jsdom": "30.0.0",
+		"lint-staged": "^16.0.0",
+		"postcss": "^8",
+		"tailwindcss": "^4.1.10",
+		"ts-jest": "^29.1.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.3"
+	}
+}

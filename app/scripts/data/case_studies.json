@@ -1,0 +1,283 @@
+[
+	{
+		"documentType": "case_study",
+		"title": "The Road Back to 100% Post-Pandemic",
+		"client": "Yakima Valley Radiology",
+		"clientDescription": "Yakima Valley Radiology is an independent radiology group's billing company serving the greater Yakima Valley and surrounding areas.",
+		"clientDetails": [
+			"2 facilities",
+			"7 physicians",
+			"150,000 visits per year",
+			"170,000 CPTs per year",
+			"4 full-time and 1 part-time billing staff"
+		],
+		"location": "Yakima, WA",
+		"challenge": "Maintaining a bird's eye view of volume & coding changes throughout 2020.",
+		"challengeDescription": "In March 2020, the United States entered a nation-wide quarantine to fight the spread of COVID-19. Between this mass shutdown and a local hospital closing just a month prior, Yakima Valley Radiology sought after real-time reporting to monitor their facilities' volume changes and better predict upcoming trends. With volumes down 60% from the previous year due to the pandemic, Yakima Valley Radiology also searched for ways to further automate their billing process – keeping up with changes in business, legislation, and coding.",
+		"challengeDetails": [
+			"The Yakima team uncovered additional features within multiple areas of the ImagineBilling™ system, providing exactly what they were looking for",
+			"ImagineAppliance® – Automates routine manual processes for hands-free operating",
+			"AutoCoder – Automates coding process and identifies common coding scenarios through rules-based system",
+			"Charge Central – Automates charge capture for faster, more accurate processing when working charges",
+			"Criteria Builder – Advanced rules-management module for automating logic-driven, user-defined billing rules",
+			"Profiles – Accommodates multiple payor profiles for better insight into managing insurance payments"
+		],
+		"solution": "Leveraging ImagineBilling™'s real-time reporting & automation functionality.",
+		"solutionDetails": [
+			"Yakima Valley Radiology utilized data pulled from ImagineBilling™'s Charge Central and Criteria Builder modules to run weekly and monthly reports for each doctor and billing location. This data-mine provided doctors with real-time volume changes to monitor and track the effects of COVID-19's quarantine and its aftermath. Five total reports were pulled for each facility, tracking volume, modality, service date, activity, and coding – all to ensure accurate comparisons between current and past year's statistics.",
+			"Throughout 2020, Yakima Valley Radiology wanted to continue advancing their automation and accuracy. Utilizing ImagineBilling's AutoCoder and Charge Central tools, along with ImagineAppliance®, their team was empowered to maintain accurate claims processing, keep up with updated codes, and monitor payor and contract changes.",
+			"The Yakima Valley Radiology team optimizes ImagineSoftware's products to their highest standard by taking part in ongoing learning initiatives provided to all Imagine clients at no additional cost, including monthly ImagineBilling and Product Release training webinars, as well as ImagineLearning courses, to implement best and most up-to-date practices. As new features and functionality are released, Yakima Valley Radiology wants to ensure they are used promptly and properly – which is credited for their consistent revenue streams year after year."
+		],
+		"result": "Yakima Valley Radiology's Days in Accounts Receivable dropped to a monthly average of 24.47. The industry standard for excellence in this metric is between 30-35 days.",
+		"resultDetails": [
+			"Maintained all billing staff throughout COVID-19 shutdown & after effects",
+			"Maintained all physicians throughout COVID-19 shutdown & after effects",
+			"Reached 100% pre-pandemic volumes as of March 2021"
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Oncology Practice Restores Financial Stability with ImagineSoftware's RCM Suite",
+		"client": "",
+		"clientDescription": "A small, independent radiation oncology practice in the Mid-Atlantic region was processing more than 1,500 claims per month and relying on a fully remote billing team of 6–10 FTEs. While clinically successful, the organization faced mounting financial pressure due to inefficiencies and lack of transparency from an outsourced billing vendor. Leadership made the high-stakes decision to bring billing in-house and selected ImagineSoftware as its revenue cycle management (RCM) partner.",
+		"clientDetails": [],
+		"location": "Mid-Atlantic region",
+		"challenge": "For years, the practice outsourced billing to a third-party vendor. Over time, serious issues emerged.",
+		"challengeDescription": "With a small operational footprint and all billing staff working remotely, the practice also required a secure, cloud-based platform that could support complex oncology workflows without disrupting care delivery. Leadership recognized that continuing with the status quo was not sustainable. Failure during a transition would have been disastrous, yet doing nothing posed an even greater risk.",
+		"challengeDetails": [
+			"Bank reconciliation discrepancies between billing records and actual deposits",
+			"Limited reporting and visibility, making it difficult to understand true financial performance",
+			"Delayed accounts receivable, contributing to cash flow challenges",
+			"Growing concern that continued reliance on the vendor could put the practice at financial risk"
+		],
+		"solution": "The practice decided to bring billing in-house and partnered with ImagineSoftware to modernize and stabilize its revenue cycle operations.",
+		"solutionDetails": [
+			"Eligibility tools to reduce front-end denials and improve collections",
+			"Bank Reconciliation tools to resolve long-standing bank reconciliation issues and restore confidence in financial data",
+			"Integrated clearinghouse to streamline claim submission and payer communications",
+			"Robust reporting and analytics to deliver real-time visibility into revenue, A/R, and operational performance",
+			"Patient payment portal for secure credit card processing and patient payment access",
+			"Patient statement solution to support a smooth, professional statement process",
+			"The cloud-based nature of ImagineSoftware allowed the practice's entire remote billing team to work securely and efficiently from day one."
+		],
+		"result": "Compared to their previous third-party billing arrangement, the practice experienced significantly stronger financial performance and confidence in their data.",
+		"resultDetails": [
+			"Accounts receivable improved immediately following implementation",
+			"Revenue increased, stabilizing the practice's financial position",
+			"Leadership gained unprecedented transparency and control over billing and cash flow",
+			"Reconciliation discrepancies that plagued the practice for years were fully resolved",
+			"The billing team operated more efficiently within a single, unified RCM platform"
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Escalating Radiology Group's Efficiency",
+		"client": "Kentucky Radiology Practice Group",
+		"clientDescription": "This radiology private practice group offers hospital staffing and image interpretations services to imaging centers and physicians' offices throughout the state of Kentucky",
+		"clientDetails": [
+			"15 billing staff",
+			"500,000 charges per year"
+		],
+		"location": "Kentucky",
+		"challenge": "Eliminating manual billing processes & supporting inefficiencies.",
+		"challengeDescription": "The client's IT Trainer and Software Administrator experienced inefficiencies in the day-to-day billing workflow and in software support at the practice group. The radiology practice has fifteen employees in their billing staff, all of whom had to create workarounds and complete manual tasks to ensure that their billing software worked properly.",
+		"challengeDetails": [
+			"As far as support, we never made a lot of traction in fixing our process weaknesses.",
+			"If something happened — like the hospital unexpectedly changing an interface — we'd contact support and it would take thirty days to resolve the issue.",
+			"We don't have the manpower to address that kind of problem with manual entry, and that hinders the amount of revenue we should receive.",
+			"While the practice's old software vendors attempted to solve their workflow issues, they were not always addressed or could not be resolved, leading to more manual processes in their billing workflow."
+		],
+		"solution": "Discovering reliable support & efficient claims management.",
+		"solutionDetails": [
+			"The largest improvement in workflow was for the practice's coders using the ImagineBilling™ filtering capabilities and ImagineAppliance®.",
+			"The filtering capability is phenomenal, that's not something we had before.",
+			"Coders can filter down and focus on procedures, insurance, etc.",
+			"We improved our rate of denials with that.",
+			"The practice also experienced improved automation in electronic remittance posting with ImagineAppliance®.",
+			"ImagineAppliance® gives us a more granular ability to figure out what happens to a denial depending on its corresponding insurance plan."
+		],
+		"result": "Once the practice began ImagineSoftware implementation, the Software Administrator noticed a change in the level of support.",
+		"resultDetails": [
+			"I never feel alone with ImagineSoftware support.",
+			"The Imagine Support and Implementation teams worked together to provide the practice with an unprecedented level of personal support.",
+			"We have one dedicated Client Success Manager that we contact, and someone who serves as a back-up, which is the smartest way to set up support in my opinion.",
+			"When we call, we know we're talking to someone that understands our challenges personally."
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Transitioning to a New Radiology Billing System",
+		"client": "Radiology Imaging Center",
+		"clientDescription": "This Radiologist and Imaging Center provides patients state-of-the-art levels of care, technology, and clinical research, advancing their medical imaging services throughout five centers.",
+		"clientDetails": [
+			"5 imaging centers"
+		],
+		"location": "",
+		"challenge": "Racing against the clock to find a new medical billing software solution.",
+		"challengeDescription": "Practice leadership was faced with the unexpected when their software vendor informed them that their medical billing solution would no longer be supported. The practice was forced to search for a fourth billing system in a sixteen-year time span and needed to select and transition to a new solution within twelve to eighteen months without compromising A/R migration or experiencing downtime.",
+		"challengeDetails": [
+			"Required a complete data migration without maintaining dual systems",
+			"Prior software conversion was still incomplete two years later",
+			"Risk of downtime or data loss during transition",
+			"Concern that outsourcing billing could threaten practice independence"
+		],
+		"solution": "Selecting and transitioning to ImagineSoftware with a focus on seamless data migration and minimal disruption.",
+		"solutionDetails": [
+			"After multiple vendor evaluations and cost/benefit analyses, the practice partnered with ImagineSoftware to manage a mid-year conversion",
+			"Staff were trained for three days prior to go-live",
+			"The transition occurred over a weekend, allowing staff to be fully functional the following Monday",
+			"Only four hours of uninterrupted training time were required for staff to learn the new system",
+			"The support team provided direct after-hours contact during the transition"
+		],
+		"result": "The practice experienced a smooth transition with improved automation, faster issue resolution, and complete data migration.",
+		"resultDetails": [
+			"Billing issues were resolved within twenty-four to forty-eight hours using Imagine's ticketing system",
+			"Automation of manual billing functions using ImagineAppliance®",
+			"All historical data migrated immediately into the new system",
+			"Improved ability to drill down denials by insurance plan",
+			"Significant time and cost savings following implementation"
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Scalability, Reporting, and Patient Payment Portals for Radiology Billing",
+		"client": "RadNet Management Inc",
+		"clientDescription": "RadNet Management Inc is an imaging powerhouse in the radiology community, owning and operating over 300 imaging centers nationwide, and is the largest provider of freestanding, fixed-site outpatient diagnostic imaging in the country.",
+		"clientDetails": [
+			"170 call center individuals",
+			"300 imaging centers"
+		],
+		"location": "Los Angeles, CA",
+		"challenge": "Real-Time Reporting and Analytics",
+		"challengeDescription": "One challenge with managing so many locations was RadNet's ability to access reports in a timely manner.",
+		"challengeDetails": [
+			"We needed software that could give us unlimited reporting capabilities.",
+			"Software we've used before didn't have real-time reporting.",
+			"To manage our imaging centers and A/R the way we wanted to, we knew we needed it real-time.",
+			"Our challenge from the beginning was that every acquisition used different billing software."
+		],
+		"solution": "ImagineIntelligence™, ImaginePay™",
+		"solutionDetails": [
+			"ImagineSoftware's business intelligence tool played an important role in RadNet's selection of a new software provider.",
+			"It's incredible. The information you get from the tool is all you really need to manage your A/R, and you get it in real-time.",
+			"After undergoing multiple vendor evaluations, cost/benefit analyses, and developing a plan with the Imagine Team to manage a conversion in the middle of the year, they began migrating to ImagineSoftware in the beginning of October 2017.",
+			"I didn't want to mess around. [ImagineSoftware] knew what we wanted and showed sensitivity to how many transitions we had already undergone.",
+			"Offering patient-centered solutions is where the industry is going.",
+			"ImaginePay™ helps us get patients on and off the phone quickly and it's really convenient for the end-user to obtain credit card information or ACH for checking.",
+			"The payment hits the patient's account immediately, so from a billing cycle perspective, it's convenient for the patient and we don't have to send out more statements."
+		],
+		"result": "We've been able to put all our imaging centers onto one platform.",
+		"resultDetails": [
+			"ImagineSoftware has certainly helped us from that perspective.",
+			"I manage about 170 call center individuals who answer questions about patient statements.",
+			"It helps us get patients on and off the phone quickly.",
+			"It's convenient for the patient and we don't have to send out more statements."
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Funneling All Specialties through One Billing Software",
+		"client": "Comprehensive Medical Solutions, Inc.",
+		"clientDescription": "Comprehensive Medical Solutions, Inc. (CompMed) is a business management company, offering billing, practice management, accounting, payroll, contracting and more.",
+		"clientDetails": [
+			"23 billing staff",
+			"446 physicians",
+			"10+ medical specialties",
+			"filing claims across 35 states"
+		],
+		"location": "Georgia",
+		"challenge": "Maintaining high-quality services throughout multiple medical practices, specialties, and states.",
+		"challengeDescription": "CompMed works with a wide variety of specialties, filing claims across 35 states. Each specialty's unique coding and billing needs call for a configurable software solution, equipped with automation and reporting that could keep up with a multitude of demands.",
+		"challengeDetails": [
+			"Automation technology",
+			"Electronic payment posting",
+			"Real-time analytic reports",
+			"Robust staff training and implementation program",
+			"Online, secure payment portal"
+		],
+		"solution": "Optimizing human touch and revolutionary technology for efficient workflows.",
+		"solutionDetails": [
+			"CompMed's billing team consists of all US-based Certified Coders, certified in their unique specialty.",
+			"ImagineSoftware's billing and RCM technology has enabled CompMed to run all clients' billing through Imagine's single RCM platform.",
+			"Dashboards: ImagineSoftware's RCM platform work queue offers a paperless, bird's eye view of all CompMed's activities.",
+			"Reporting: ImagineSoftware comes standard with over 200 real-time reports for gathering metrics, tracking trends, and planning for the future.",
+			"Patient Payments: The elimination of an automated phone system allows for all phone calls to be answered by a real person.",
+			"Training & Customer Service: CompMed's level of customer service was matched with ImagineSoftware's Implementation and Client Success teams."
+		],
+		"result": "ImagineSoftware has the ability to accommodate any type of billing.",
+		"resultDetails": [
+			"We mastered Imagine – We want to funnel all business through the Imagine RCM system.",
+			"Everyone can see what's going on. It's truly revolutionized how we work.",
+			"We can run anything [our clients] can think of, which is very, very helpful for us!",
+			"Boom – It's easy to do!",
+			"ImagineSoftware improves the quality of patient care for the practices we're serving."
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Scaling to 200% Growth with RCM Automation",
+		"client": "Rezolut",
+		"clientDescription": "Rezolut is a national emerging platform of diagnostic medical imaging services. With a focus on four key platforms, the organization's vision is to provide top-notch patient care with innovative technology.",
+		"clientDetails": [
+			"48 imaging centers",
+			"500K patients per year",
+			"1.1M procedures per year",
+			"7 radiologists"
+		],
+		"location": "Atlanta, GA",
+		"challenge": "Managing Rapid Growth with Precision",
+		"challengeDescription": "When growth strikes at scale, transformation isn't optional—it's imperative. That was the reality for Rezolut, expanding to a 200% increase in operations over the course of two years. With that growth came new locations, added complexity, and mounting pressure to maintain billing performance, data integrity, and patient satisfaction.",
+		"challengeDetails": [
+			"200% Growth in Operations",
+			"13 Separate, Manual Databases",
+			"Need for Unity and Automation",
+			"Everything was on a manual basis",
+			"I was told there were a couple of databases, which turned out to be 13 within a year"
+		],
+		"solution": "Building a Blueprint for Scalable Automation",
+		"solutionDetails": [
+			"Rezolut partnered with ImagineSoftware to build a blueprint, systematically strategizing a focused transformation from manual to automated.",
+			"Build a centralized and credentialed database",
+			"Enable real-time charge flow",
+			"Create a standard ingestion interface for all sites",
+			"Set benchmarks for automation at every level"
+		],
+		"result": "Rezolut achieved transformative outcomes by leveraging the automation capabilities of ImagineSoftware's RCM platform, ImagineOne®.",
+		"resultDetails": [
+			"94%+ Clean Claim Rate",
+			"29 days in Accounts Receivable",
+			"2.2% Cost to Collect",
+			"Rezolut utilized AI technology through ImagineSoftware's imagineCo-Pilot™, enabling them to scale, including managing claim preparation, denial prediction, and downloads, all without significantly increasing headcount",
+			"Today, all Rezolut users are live on ImagineOne®, with significant gains in speed, latency, and usability"
+		]
+	},
+	{
+		"documentType": "case_study",
+		"title": "Automating Pathology RCM",
+		"client": "Texas Pathology Consultants",
+		"clientDescription": "Texas Pathology Consultants is dedicated to delivering diagnostic excellence with accurate and precise information to achieve the highest level of patient care.",
+		"clientDetails": [],
+		"location": "",
+		"challenge": "Converting from Homegrown Billing System",
+		"challengeDescription": "Texas Pathology Consultants utilized a proprietary billing system, originally developed in the 1980s. Dr. Kevin Homer, President of Texas Pathology Consultants and Pathologist, realized as anatomical and clinical pathology coding increased in complexity, he needed to find a revenue cycle management (RCM) solution that could keep up.",
+		"challengeDetails": [
+			"When we encountered ICD-10, we knew our existing system wouldn't survive, and we had to find an alternative."
+		],
+		"solution": "Leveraging Automation Technology and Analytics",
+		"solutionDetails": [
+			"According to Dr. Homer, ImagineSoftware's RCM platform is a very robust software solution, handling the multiple thousands of procedures each month, processing with precise accuracy and unparalleled efficiency, leveraging automation technology.",
+			"ImagineSoftware's all-in-one RCM platform has also armed Texas Pathology Consultants with insights and intelligence, driving data-driven decisions and giving a bird's eye view into their organization.",
+			"Real-time reporting allows Dr. Homer to access information without slowing down the system or workflows.",
+			"Leveraging ImagineSoftware's hosting solution, Texas Pathology Consultants liberated themselves of an on-site server, hardware maintenance, and cybersecurity risks.",
+			"We make it a priority to automate as much of our billing process as possible.",
+			"Having the ability to build custom reports is phenomenal and has become an integral part of running my business."
+		],
+		"result": "Imagine has taken the administrative headaches of practice management off my plate, giving me more time to be a pathologist.",
+		"resultDetails": [
+			"Implementing a New RCM Platform",
+			"Our Client Success Manager continually goes above and beyond for our practice.",
+			"Our environment isn't static; it's constantly changing. Having a reliable partner like Imagine that helps us work through changes and create solutions as our business needs to evolve is essential to our success.",
+			"Imagine has never been a 'drop it in your lap and see you later' company. They are partners with us."
+		]
+	}
+]
