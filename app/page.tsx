@@ -208,9 +208,9 @@ export default function Home() {
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
 					{/* Messages Area */}
-					<div className={`h-[500px] p-6 space-y-4 ${allMessages.length === 0 ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+					<div className={`h-[400px] sm:h-[500px] p-4 sm:p-6 space-y-4 ${allMessages.length === 0 ? 'overflow-hidden' : 'overflow-y-auto'}`}>
 						{allMessages.length === 0 && (
-							<div className="text-center py-8">
+							<div className="text-center py-4 sm:py-8">
 								<h3 className="text-xl font-medium text-gray-700 mb-3">
 									How can we help your practice?
 								</h3>
@@ -219,7 +219,7 @@ export default function Home() {
 									or operational goals. We&apos;re here to help you optimize your 
 									healthcare business.
 								</p>
-								<div className="relative rounded-xl overflow-hidden shadow-lg max-w-lg mx-auto bg-black">
+								<div className="relative rounded-xl overflow-hidden shadow-lg max-w-full sm:max-w-lg mx-auto bg-black">
 									{!showYouTube ? (
 										<div
 											onClick={() => setShowYouTube(true)}
@@ -362,36 +362,38 @@ export default function Home() {
 
 					{/* Input Area */}
 					<div className="border-t border-gray-200 p-4 bg-gray-50/80">
-						<form onSubmit={handleSubmit} className="flex gap-3 items-end">
+						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-end">
 							<textarea
 								ref={textareaRef}
 								value={input}
 								onChange={handleTextareaChange}
 								onKeyDown={handleKeyDown}
 								placeholder="Describe your business challenge here..."
-								className="flex-1 px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none min-h-[48px] max-h-[200px]"
+								className="w-full sm:flex-1 px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none min-h-[48px] max-h-[200px]"
 								disabled={isLoading}
 								rows={1}
 							/>
-							<button
-								type="submit"
-								disabled={isLoading || !input.trim()}
-								className="px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
-							>
-								{isLoading ? 'Sending...' : 'Send'}
-							</button>
-							<button
-								type="button"
-								onClick={() => {
-									setMessages([]);
-									setShowYouTube(false);
-									setVideoEnded(false);
-								}}
-								disabled={isLoading || messages.length === 0}
-								className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
-							>
-								Clear
-							</button>
+							<div className="flex gap-3 sm:contents">
+								<button
+									type="submit"
+									disabled={isLoading || !input.trim()}
+									className="flex-1 sm:flex-none px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+								>
+									{isLoading ? 'Sending...' : 'Send'}
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setMessages([]);
+										setShowYouTube(false);
+										setVideoEnded(false);
+									}}
+									disabled={isLoading || messages.length === 0}
+									className="flex-1 sm:flex-none px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
+								>
+									Clear
+								</button>
+							</div>
 						</form>
 					</div>
 				</div>
