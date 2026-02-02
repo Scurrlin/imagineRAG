@@ -1,6 +1,8 @@
 # ImagineSoftware RAG Assistant
 
-A RAG-powered chat interface for ImagineSoftware business development. Potential clients can describe their business challenges and receive relevant case studies and white paper references.
+![banner_image](public/imagine-preview.png)
+
+A RAG-powered chat interface designed to simulate an initial constultation with ImagineSoftware. Potential clients can describe their business challenges and receive relevant case studies and white paper references.
 
 **Live Demo**: [https://imaginerag.onrender.com](https://imaginerag.onrender.com)
 
@@ -66,30 +68,39 @@ Add your documents to the appropriate files:
     "clientDescription": "Description of the client...",
     "clientDetails": ["Detail 1", "Detail 2"],
     "location": "City, State",
-    "challenge": "The problem they faced",
+    "challenge": "Brief challenge summary",
     "challengeDescription": "Detailed challenge description...",
     "challengeDetails": ["Challenge 1", "Challenge 2"],
-    "solution": "How ImagineSoftware helped",
+    "solution": "Brief solution summary",
     "solutionDetails": ["Solution detail 1", "Solution detail 2"],
-    "result": "The outcome",
+    "result": "Brief result summary",
     "resultDetails": ["Result 1", "Result 2"]
   }
 ]
 ```
 
 **White Papers** - `app/scripts/data/white_papers.json`:
+
+White papers are chunked by section for more granular retrieval:
 ```json
 [
   {
     "documentType": "white_paper",
     "title": "White Paper Title",
-    "content": "Full text content that will be embedded...",
-    "service": "Service Name",
-    "statusQuo": "Current industry state",
-    "keyPoints": ["Point 1", "Point 2"],
-    "challenges": [{ "problem": "Problem", "impact": "Impact" }],
-    "potentialRisks": ["Risk 1"],
-    "conclusions": ["Conclusion 1"]
+    "subtitle": "Topic Area",
+    "theme": "Main theme description",
+    "year": "2025",
+    "executiveSummary": "Overview of the white paper...",
+    "sections": [
+      {
+        "sectionTitle": "Section Title",
+        "sectionType": "overview|policy|regulation|technology|outlook",
+        "content": "Section content...",
+        "keyPoints": ["Point 1", "Point 2"],
+        "quotes": ["Notable quote"]
+      }
+    ],
+    "keyTakeaways": "Summary takeaway message"
   }
 ]
 ```
@@ -137,43 +148,6 @@ app/
 ├── globals.css             # Global styles
 ├── layout.tsx              # Root layout
 └── page.tsx                # Main chat UI
-public/
-├── background.jpg          # Background image
-├── favicon.png             # Favicon
-├── imagine_logo.svg        # Main logo
-└── imagine-logo2.webp      # Secondary logo (25 years badge)
-```
-
-## Document Schemas
-
-### Case Study
-
-```typescript
-{
-  documentType: 'case_study',
-  content: string,           // Full text for embedding
-  client?: string,           // Client name (optional)
-  location?: string,
-  challenge: string,         // Business challenge
-  solution: string,          // ImagineSoftware's solution
-  result: string,            // Outcome
-  relevantPoints?: string[]  // Additional context
-}
-```
-
-### White Paper
-
-```typescript
-{
-  documentType: 'white_paper',
-  content: string,           // Full text for embedding
-  service: string,           // Service/product covered
-  statusQuo?: string,
-  keyPoints?: string[],
-  challenges?: Array<{ problem: string, impact: string }>,
-  potentialRisks?: string[],
-  conclusions?: string[]
-}
 ```
 
 ## API Endpoints
@@ -191,25 +165,12 @@ Upload individual documents (case studies or white papers).
 
 Key thresholds in `app/api/guardrail/route.ts`:
 - `CONFIDENCE_THRESHOLD`: 4 (LLM confidence score minimum)
-- `SIMILARITY_THRESHOLD`: 0.45 (Embedding cosine similarity minimum)
+- `SIMILARITY_THRESHOLD`: 0.4 (Embedding cosine similarity minimum)
 
 Re-ranking settings in `app/agents/rag.ts`:
-- Retrieves top 15 candidates from Qdrant
-- Re-ranks to top 3 with Cohere
+- Retrieves top 14 candidates from Qdrant (4 case studies, 10 white paper chunks)
+- Re-ranks to top 6 with Cohere (1 case study, 5 white paper chunks)
 
 Chat input settings in `app/page.tsx`:
 - Maximum 400 characters per message
 - Character counter appears at 320+ characters
-
-## Deployment (Render)
-
-1. Connect your GitHub repository to Render
-2. Create a new Web Service
-3. Configure:
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm run start`
-   - **Node Version**: Set `NODE_VERSION=20` in environment variables
-4. Add all required environment variables (without quotes around values)
-5. Deploy
-
-The app will be available at your Render URL (e.g., `https://your-app.onrender.com`)
