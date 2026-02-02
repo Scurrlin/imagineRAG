@@ -124,30 +124,30 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000)
 
-## Project Structure
+## Core Project Structure
 
 ```
 app/
 ├── agents/
-│   ├── rag.ts              # Main RAG agent with retrieval tool
-│   └── types.ts            # TypeScript types for documents
+│   ├── rag.ts                  # Main RAG agent with retrieval tool
+│   └── types.ts                # TypeScript types for documents
 ├── api/
-│   ├── chat/               # Main chat endpoint
-│   ├── guardrail/          # Query validation endpoint
-│   └── upload-document/    # Document upload API
+│   ├── chat/                   # Main chat endpoint
+│   ├── guardrail/              # Query validation endpoint
+│   └── upload-document/        # Document upload API
 ├── libs/
-│   ├── cohere.ts           # Cohere re-ranking client
-│   ├── openai.ts           # OpenAI client configuration
-│   ├── qdrant.ts           # Qdrant client
-│   └── utils.ts            # Utility functions
+│   ├── cohere.ts               # Cohere re-ranking client
+│   ├── openai.ts               # OpenAI client configuration
+│   ├── qdrant.ts               # Qdrant client
+│   └── utils.ts                # Utility functions
 ├── scripts/
 │   ├── data/
 │   │   ├── case_studies.json   # Case studies
 │   │   └── white_papers.json   # White papers
 │   └── upload-documents.ts     # Upload script
-├── globals.css             # Global styles
-├── layout.tsx              # Root layout
-└── page.tsx                # Main chat UI
+├── globals.css                 # Global styles
+├── layout.tsx                  # Root layout
+└── page.tsx                    # Main chat UI
 ```
 
 ## API Endpoints
