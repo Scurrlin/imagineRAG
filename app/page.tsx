@@ -265,41 +265,46 @@ export default function Home() {
 											/>
 											{/* Replay overlay - only shows when video ends */}
 											{videoEnded && (
-												<div className="absolute inset-0 bg-black flex items-center justify-center gap-4 p-4 animate-fade-in">
+												<div className="absolute inset-0 bg-black flex items-center justify-center gap-6 p-4 animate-fade-in">
 													{/* Logo on the left */}
-													<a
-														href="https://imagineteam.com/contact-us/"
-														target="_blank"
-														rel="noopener noreferrer"
-														className="flex-1 flex items-center justify-center"
-													>
+													<div className="flex-1 flex items-center justify-center">
 														<img
 															src="/imagine-logo2.webp"
-															alt="Speak to an Expert"
-															className="w-full max-w-[200px] h-auto rounded-xl hover:opacity-80 transition-opacity cursor-pointer"
+															alt="ImagineSoftware 25 Years"
+															className="w-full max-w-[200px] h-auto rounded-xl border border-white/30"
 														/>
-													</a>
-													{/* Replay button on the right */}
-													<div
-														className="flex-1 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-														onClick={() => {
-															setVideoEnded(false);
-															setYoutubeKey(prev => prev + 1);
-														}}
-													>
-														<svg
-															className="w-20 h-20 text-white"
-															fill="none"
-															stroke="currentColor"
-															strokeWidth={2}
-															viewBox="0 0 24 24"
+													</div>
+													{/* Replay button and link on the right */}
+													<div className="flex-1 flex flex-col items-center justify-center">
+														<div
+															className="cursor-pointer hover:opacity-80 transition-opacity"
+															onClick={() => {
+																setVideoEnded(false);
+																setYoutubeKey(prev => prev + 1);
+															}}
 														>
-															<path
-																strokeLinecap="round"
-																strokeLinejoin="round"
-																d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-															/>
-														</svg>
+															<svg
+																className="w-16 h-16 text-white"
+																fill="none"
+																stroke="currentColor"
+																strokeWidth={2}
+																viewBox="0 0 24 24"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+																/>
+															</svg>
+														</div>
+														<a
+															href="https://imagineteam.com/contact-us/"
+															target="_blank"
+															rel="noopener noreferrer"
+															className="mt-4 text-white text-lg font-medium cursor-pointer hover:underline"
+														>
+															Speak to an Expert
+														</a>
 													</div>
 												</div>
 											)}
