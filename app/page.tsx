@@ -205,9 +205,9 @@ export default function Home() {
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
 					{/* Messages Area */}
-					<div className={`p-4 sm:p-6 space-y-4 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[500px] overflow-y-auto'}`}>
+					<div className={`p-4 sm:p-5 space-y-4 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
 						{allMessages.length === 0 && (
-							<div className="text-center py-4 sm:py-8">
+							<div className="text-center py-4 sm:py-5">
 								<h3 className="text-xl font-medium text-gray-700 mb-3">
 									How can we help your practice?
 								</h3>
@@ -265,17 +265,30 @@ export default function Home() {
 											/>
 											{/* Replay overlay - only shows when video ends */}
 											{videoEnded && (
-												<div className="absolute inset-0 bg-black flex flex-col items-center justify-center animate-fade-in">
-													{/* Replay arrow */}
+												<div className="absolute inset-0 bg-black flex items-center justify-center gap-4 p-4 animate-fade-in">
+													{/* Logo on the left */}
+													<a
+														href="https://imagineteam.com/contact-us/"
+														target="_blank"
+														rel="noopener noreferrer"
+														className="flex-1 flex items-center justify-center"
+													>
+														<img
+															src="/imagine-logo2.webp"
+															alt="Speak to an Expert"
+															className="w-full max-w-[200px] h-auto rounded-xl hover:opacity-80 transition-opacity cursor-pointer"
+														/>
+													</a>
+													{/* Replay button on the right */}
 													<div
-														className="cursor-pointer"
+														className="flex-1 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
 														onClick={() => {
 															setVideoEnded(false);
 															setYoutubeKey(prev => prev + 1);
 														}}
 													>
 														<svg
-															className="w-16 h-16 text-white"
+															className="w-20 h-20 text-white"
 															fill="none"
 															stroke="currentColor"
 															strokeWidth={2}
@@ -288,15 +301,6 @@ export default function Home() {
 															/>
 														</svg>
 													</div>
-													{/* Speak to an Expert link */}
-													<a
-														href="https://imagineteam.com/contact-us/"
-														target="_blank"
-														rel="noopener noreferrer"
-														className="mt-6 text-white text-xl font-medium cursor-pointer hover:underline"
-													>
-														Speak to an Expert
-													</a>
 												</div>
 											)}
 										</div>
