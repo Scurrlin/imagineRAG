@@ -87,7 +87,7 @@ export default function Home() {
 			// Video ended, show overlay after 1 second
 			setTimeout(() => {
 				setVideoEnded(true);
-			}, 1000);
+			}, 500);
 		}
 	}, []);
 
