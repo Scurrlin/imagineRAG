@@ -300,7 +300,7 @@ export default function Home() {
 											{/* Mobile: Static image in video-sized container */}
 											<div className="aspect-video block sm:hidden">
 												<img
-													src="/imagine-still.webp"
+													src="/imagine-still.png"
 													alt="ImagineSoftware"
 													className="w-full h-full object-cover"
 												/>
