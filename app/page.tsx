@@ -359,7 +359,7 @@ export default function Home() {
 
 					{/* Input Area */}
 					<div className="border-t border-gray-200 p-4 bg-gray-50/80">
-						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-end">
+						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
 							<div className="w-full sm:flex-1">
 								<textarea
 									ref={textareaRef}
@@ -368,16 +368,16 @@ export default function Home() {
 									onKeyDown={handleKeyDown}
 									placeholder="Describe your business challenge here..."
 									maxLength={400}
-									className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
+									className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
 									disabled={isLoading}
 									rows={3}
 								/>
 							</div>
-							<div className="flex gap-3">
+							<div className="flex gap-3 sm:flex-col sm:w-[100px] lg:flex-row lg:w-auto">
 								<button
 									type="submit"
 									disabled={isLoading || !input.trim()}
-									className="flex-1 sm:flex-none px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+									className="flex-1 px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 								>
 									{isLoading ? 'Sending...' : 'Send'}
 								</button>
@@ -389,7 +389,7 @@ export default function Home() {
 										setVideoEnded(false);
 									}}
 									disabled={isLoading || messages.length === 0}
-									className="flex-1 sm:flex-none px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
+									className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
 								>
 									Clear
 								</button>
