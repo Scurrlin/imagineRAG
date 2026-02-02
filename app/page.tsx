@@ -18,7 +18,6 @@ export default function Home() {
 	const [videoEnded, setVideoEnded] = useState(false);
 	const [youtubeKey, setYoutubeKey] = useState(0);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const videoRef = useRef<HTMLVideoElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	// Handle textarea change
@@ -36,24 +35,13 @@ export default function Home() {
 		}
 	};
 
-	// Stop video 0.6 seconds before it ends (re-run when video reappears)
-	useEffect(() => {
-		const video = videoRef.current;
-		if (!video) return;
-
-		// Reset video to start when it reappears
-		video.currentTime = 0;
-		video.play().catch(() => {}); // catch autoplay errors silently
-
-		const handleTimeUpdate = () => {
-			if (video.duration && video.currentTime >= video.duration - 0.6) {
-				video.pause();
-			}
-		};
-
-		video.addEventListener('timeupdate', handleTimeUpdate);
-		return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-	}, [showYouTube]);
+	// Stop video 0.6 seconds before it ends
+	const handleVideoTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+		const video = e.currentTarget;
+		if (video.duration && video.currentTime >= video.duration - 0.6) {
+			video.pause();
+		}
+	};
 
 	// Auto-scroll to bottom of messages (only when there are messages)
 	useEffect(() => {
@@ -228,12 +216,12 @@ export default function Home() {
 											aria-label="Watch Video"
 										>
 											<video
-												ref={videoRef}
 												width="1920"
 												height="1080"
 												autoPlay
 												muted
 												playsInline
+												onTimeUpdate={handleVideoTimeUpdate}
 												className="w-full h-auto"
 											>
 												<source
