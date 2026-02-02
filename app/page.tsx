@@ -176,18 +176,24 @@ export default function Home() {
 			/>
 
 			{/* Content */}
-			<div className="relative z-10 max-w-4xl mx-auto px-4 py-8">
+			<div className="relative z-10 max-w-4xl mx-auto px-4 pt-2 pb-8">
 				{/* Header */}
 				<div className="text-center mb-10">
 					<div className="flex justify-center mb-6">
-						<Image
-							src="/imagine_logo.svg"
-							alt="ImagineSoftware"
-							width={280}
-							height={60}
-							priority
-							className="h-auto"
-						/>
+						<a
+							href="https://imagineteam.com/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Image
+								src="/imagine_logo.svg"
+								alt="ImagineSoftware"
+								width={280}
+								height={60}
+								priority
+								className="h-auto cursor-pointer"
+							/>
+						</a>
 					</div>
 					<h1 className="text-2xl font-semibold text-white tracking-wide drop-shadow-lg">
 						Take a Quantum Leap in Healthcare Systems Technology
