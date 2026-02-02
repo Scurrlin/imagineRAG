@@ -7,6 +7,8 @@ import Image from 'next/image';
 // YouTube IFrame API types
 interface YTPlayer {
 	destroy: () => void;
+	getCurrentTime: () => number;
+	getDuration: () => number;
 }
 
 interface YTPlayerOptions {
@@ -81,13 +83,27 @@ export default function Home() {
 	}, [messages]);
 
 	// Handle YouTube player state change
+	const endTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 	const onPlayerStateChange = useCallback((event: { data: number }) => {
-		// PlayerState.ENDED === 0
-		if (event.data === 0) {
-			// Video ended, show overlay after 0.1 seconds
-			setTimeout(() => {
-				setVideoEnded(true);
-			}, 100);
+		// PlayerState.PLAYING === 1
+		if (event.data === 1 && playerInstanceRef.current) {
+			const player = playerInstanceRef.current;
+			const currentTime = player.getCurrentTime();
+			const duration = player.getDuration();
+			const timeUntilFade = (duration - currentTime - 0.1) * 1000;
+			
+			if (endTimeoutRef.current) clearTimeout(endTimeoutRef.current);
+			if (timeUntilFade > 0) {
+				endTimeoutRef.current = setTimeout(() => setVideoEnded(true), timeUntilFade);
+			}
+		}
+		// PlayerState.PAUSED === 2, PlayerState.ENDED === 0 - clear timeout
+		if (event.data === 2 || event.data === 0) {
+			if (endTimeoutRef.current) {
+				clearTimeout(endTimeoutRef.current);
+				endTimeoutRef.current = null;
+			}
 		}
 	}, []);
 
@@ -129,6 +145,10 @@ export default function Home() {
 		}
 
 		return () => {
+			if (endTimeoutRef.current) {
+				clearTimeout(endTimeoutRef.current);
+				endTimeoutRef.current = null;
+			}
 			if (playerInstanceRef.current) {
 				playerInstanceRef.current.destroy();
 				playerInstanceRef.current = null;
