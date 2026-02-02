@@ -84,10 +84,10 @@ export default function Home() {
 	const onPlayerStateChange = useCallback((event: { data: number }) => {
 		// PlayerState.ENDED === 0
 		if (event.data === 0) {
-			// Video ended, show overlay after 1 second
+			// Video ended, show overlay after 0.1 seconds
 			setTimeout(() => {
 				setVideoEnded(true);
-			}, 500);
+			}, 100);
 		}
 	}, []);
 
