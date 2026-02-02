@@ -1,8 +1,37 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
+
+// YouTube IFrame API types
+interface YTPlayer {
+	destroy: () => void;
+}
+
+interface YTPlayerOptions {
+	videoId: string;
+	playerVars?: {
+		autoplay?: number;
+		modestbranding?: number;
+		rel?: number;
+	};
+	events?: {
+		onStateChange?: (event: { data: number }) => void;
+	};
+}
+
+interface YTNamespace {
+	Player: new (element: HTMLElement, options: YTPlayerOptions) => YTPlayer;
+}
+
+// Extend Window interface for YouTube API
+declare global {
+	interface Window {
+		YT: YTNamespace;
+		onYouTubeIframeAPIReady: () => void;
+	}
+}
 
 interface Message {
 	id: string;
@@ -16,9 +45,10 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [showYouTube, setShowYouTube] = useState(false);
 	const [videoEnded, setVideoEnded] = useState(false);
-	const [youtubeKey, setYoutubeKey] = useState(0);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const youtubePlayerRef = useRef<HTMLDivElement>(null);
+	const playerInstanceRef = useRef<YTPlayer | null>(null);
 
 	// Handle textarea change
 	const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,15 +80,61 @@ export default function Home() {
 		}
 	}, [messages]);
 
-	// Show replay button after YouTube video ends (video is ~90 seconds)
-	useEffect(() => {
-		if (showYouTube && !videoEnded) {
-			const timer = setTimeout(() => {
+	// Handle YouTube player state change
+	const onPlayerStateChange = useCallback((event: { data: number }) => {
+		// PlayerState.ENDED === 0
+		if (event.data === 0) {
+			// Video ended, show overlay after 1 second
+			setTimeout(() => {
 				setVideoEnded(true);
-			}, 29000); // 28 seconds (video is 27 seconds + small buffer)
-			return () => clearTimeout(timer);
+			}, 1000);
 		}
-	}, [showYouTube, videoEnded, youtubeKey]);
+	}, []);
+
+	// Initialize YouTube player when showYouTube becomes true
+	useEffect(() => {
+		if (!showYouTube || videoEnded) return;
+
+		const initPlayer = () => {
+			if (youtubePlayerRef.current && window.YT && window.YT.Player) {
+				// Destroy existing player if any
+				if (playerInstanceRef.current) {
+					playerInstanceRef.current.destroy();
+				}
+				
+				playerInstanceRef.current = new window.YT.Player(youtubePlayerRef.current, {
+					videoId: 'fCiN0crOXtM',
+					playerVars: {
+						autoplay: 1,
+						modestbranding: 1,
+						rel: 0,
+					},
+					events: {
+						onStateChange: onPlayerStateChange,
+					},
+				});
+			}
+		};
+
+		// Load YouTube IFrame API if not already loaded
+		if (!window.YT) {
+			const tag = document.createElement('script');
+			tag.src = 'https://www.youtube.com/iframe_api';
+			const firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+			
+			window.onYouTubeIframeAPIReady = initPlayer;
+		} else {
+			initPlayer();
+		}
+
+		return () => {
+			if (playerInstanceRef.current) {
+				playerInstanceRef.current.destroy();
+				playerInstanceRef.current = null;
+			}
+		};
+	}, [showYouTube, videoEnded, onPlayerStateChange]);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -221,6 +297,13 @@ export default function Home() {
 											className="relative cursor-pointer group"
 											aria-label="Watch Video"
 										>
+											{/* Mobile: Static image */}
+											<img
+												src="/imagine-still.webp"
+												alt="ImagineSoftware"
+												className="w-full h-auto block sm:hidden"
+											/>
+											{/* Desktop: Video */}
 											<video
 												width="1920"
 												height="1080"
@@ -228,7 +311,7 @@ export default function Home() {
 												muted
 												playsInline
 												onTimeUpdate={handleVideoTimeUpdate}
-												className="w-full h-auto"
+												className="w-full h-auto hidden sm:block"
 											>
 												<source
 													src="https://imagineteam.com/wp-content/uploads/2025/04/ef4b-4206-b344-7937abcb4293.mp4"
@@ -236,30 +319,24 @@ export default function Home() {
 												/>
 												Your browser does not support the video tag.
 											</video>
-									{/* Play button overlay */}
-									<div className="absolute inset-0 flex items-center justify-center bg-transparent group-hover:bg-black/30 transition-colors">
-										<div className="w-16 h-16 bg-[#4B9CD3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-											<svg
-												className="w-11 h-11 text-white"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-											>
-												<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
-											</svg>
-										</div>
-									</div>
+											{/* Play button overlay */}
+											<div className="absolute inset-0 flex items-center justify-center bg-transparent group-hover:bg-black/30 transition-colors">
+												<div className="w-16 h-16 bg-[#4B9CD3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+													<svg
+														className="w-11 h-11 text-white"
+														fill="currentColor"
+														viewBox="0 0 24 24"
+													>
+														<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
+													</svg>
+												</div>
+											</div>
 										</div>
 									) : (
 										<div className="aspect-video relative">
-											<iframe
-												key={youtubeKey}
-												width="100%"
-												height="100%"
-												src={`https://www.youtube.com/embed/fCiN0crOXtM?autoplay=1`}
-												title="ImagineSoftware Video"
-												frameBorder="0"
-												allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-												allowFullScreen
+											<div
+												ref={youtubePlayerRef}
+												className="w-full h-full"
 											/>
 											{/* Replay overlay - only shows when video ends */}
 											{videoEnded && (
@@ -278,7 +355,7 @@ export default function Home() {
 															className="cursor-pointer hover:opacity-80 transition-opacity"
 															onClick={() => {
 																setVideoEnded(false);
-																setYoutubeKey(prev => prev + 1);
+																// Player will reinitialize via useEffect
 															}}
 														>
 															<svg
@@ -413,7 +490,7 @@ export default function Home() {
 				{/* Footer */}
 				<div className="flex justify-center mt-4">
 					<a
-						href="https://imagineteam.com/imagineone/#form"
+						href="https://imagineteam.com/imagineone/"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md"
