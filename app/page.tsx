@@ -297,12 +297,14 @@ export default function Home() {
 											className="relative cursor-pointer group"
 											aria-label="Watch Video"
 										>
-											{/* Mobile: Static image */}
-											<img
-												src="/imagine-still.webp"
-												alt="ImagineSoftware"
-												className="w-full h-auto block sm:hidden"
-											/>
+											{/* Mobile: Static image in video-sized container */}
+											<div className="aspect-video block sm:hidden">
+												<img
+													src="/imagine-still.webp"
+													alt="ImagineSoftware"
+													className="w-full h-full object-cover"
+												/>
+											</div>
 											{/* Desktop: Video */}
 											<video
 												width="1920"
