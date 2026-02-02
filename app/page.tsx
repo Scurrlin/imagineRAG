@@ -21,14 +21,8 @@ export default function Home() {
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-	// Auto-resize textarea
 	const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setInput(e.target.value);
-		// Reset height to auto to get the correct scrollHeight
-		if (textareaRef.current) {
-			textareaRef.current.style.height = 'auto';
-			textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
-		}
 	};
 
 	// Handle Enter key (submit on Enter, new line on Shift+Enter)
@@ -364,7 +358,7 @@ export default function Home() {
 
 					{/* Input Area */}
 					<div className="border-t border-gray-200 p-4 bg-gray-50/80">
-						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
+						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-center">
 							<div className="w-full sm:flex-1">
 								<textarea
 									ref={textareaRef}
@@ -373,16 +367,16 @@ export default function Home() {
 									onKeyDown={handleKeyDown}
 									placeholder="Describe your business challenge here..."
 									maxLength={400}
-									className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none min-h-[48px] max-h-[200px]"
+									className="w-full h-[48px] px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none overflow-y-auto"
 									disabled={isLoading}
 									rows={1}
 								/>
 							</div>
-							<div className="flex gap-3 sm:flex-col sm:min-w-[100px]">
+							<div className="flex gap-3">
 								<button
 									type="submit"
 									disabled={isLoading || !input.trim()}
-									className="flex-1 px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+									className="w-[150px] py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 								>
 									{isLoading ? 'Sending...' : 'Send'}
 								</button>
@@ -394,15 +388,15 @@ export default function Home() {
 										setVideoEnded(false);
 									}}
 									disabled={isLoading || messages.length === 0}
-									className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
+									className="w-[150px] py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
 								>
 									Clear
 								</button>
 							</div>
 						</form>
 						{input.length > 320 && (
-							<div className={`text-right text-xs mt-2 ${input.length >= 400 ? 'text-red-500' : 'text-gray-400'}`}>
-								{input.length}/400
+							<div className={`text-center text-xs mt-2 ${input.length >= 400 ? 'text-red-500' : 'text-gray-400'}`}>
+								Maximum characters 400: {input.length}/400
 							</div>
 						)}
 					</div>
