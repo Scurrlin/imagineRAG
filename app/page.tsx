@@ -210,7 +210,7 @@ export default function Home() {
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
 					{/* Messages Area */}
-					<div className={`p-4 sm:p-6 space-y-4 ${allMessages.length === 0 ? 'min-h-0' : 'h-[400px] sm:h-[500px] overflow-y-auto'}`}>
+					<div className={`p-4 sm:p-6 space-y-4 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[500px] overflow-y-auto'}`}>
 						{allMessages.length === 0 && (
 							<div className="text-center py-4 sm:py-8">
 								<h3 className="text-xl font-medium text-gray-700 mb-3">
@@ -365,25 +365,20 @@ export default function Home() {
 					{/* Input Area */}
 					<div className="border-t border-gray-200 p-4 bg-gray-50/80">
 						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
-							<div className="w-full sm:flex-1 relative">
+							<div className="w-full sm:flex-1">
 								<textarea
 									ref={textareaRef}
 									value={input}
 									onChange={handleTextareaChange}
 									onKeyDown={handleKeyDown}
 									placeholder="Describe your business challenge here..."
-									maxLength={500}
+									maxLength={400}
 									className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none min-h-[48px] max-h-[200px]"
 									disabled={isLoading}
 									rows={1}
 								/>
-								{input.length > 400 && (
-									<span className={`absolute bottom-2 right-3 text-xs ${input.length >= 500 ? 'text-red-500' : 'text-gray-400'}`}>
-										{input.length}/500
-									</span>
-								)}
 							</div>
-							<div className="flex gap-3 sm:flex-col">
+							<div className="flex gap-3 sm:flex-col sm:min-w-[100px]">
 								<button
 									type="submit"
 									disabled={isLoading || !input.trim()}
@@ -405,6 +400,11 @@ export default function Home() {
 								</button>
 							</div>
 						</form>
+						{input.length > 320 && (
+							<div className={`text-right text-xs mt-2 ${input.length >= 400 ? 'text-red-500' : 'text-gray-400'}`}>
+								{input.length}/400
+							</div>
+						)}
 					</div>
 				</div>
 
