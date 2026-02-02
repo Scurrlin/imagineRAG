@@ -36,10 +36,14 @@ export default function Home() {
 		}
 	};
 
-	// Stop video 0.6 seconds before it ends
+	// Stop video 0.6 seconds before it ends (re-run when video reappears)
 	useEffect(() => {
 		const video = videoRef.current;
 		if (!video) return;
+
+		// Reset video to start when it reappears
+		video.currentTime = 0;
+		video.play().catch(() => {}); // catch autoplay errors silently
 
 		const handleTimeUpdate = () => {
 			if (video.duration && video.currentTime >= video.duration - 0.6) {
@@ -49,7 +53,7 @@ export default function Home() {
 
 		video.addEventListener('timeupdate', handleTimeUpdate);
 		return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-	}, []);
+	}, [showYouTube]);
 
 	// Auto-scroll to bottom of messages (only when there are messages)
 	useEffect(() => {
