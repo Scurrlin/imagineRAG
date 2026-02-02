@@ -376,7 +376,7 @@ export default function Home() {
 								<button
 									type="submit"
 									disabled={isLoading || !input.trim()}
-									className="w-[150px] py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+									className="flex-1 px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 								>
 									{isLoading ? 'Sending...' : 'Send'}
 								</button>
@@ -388,7 +388,7 @@ export default function Home() {
 										setVideoEnded(false);
 									}}
 									disabled={isLoading || messages.length === 0}
-									className="w-[150px] py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
+									className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
 								>
 									Clear
 								</button>
