@@ -1,4 +1,4 @@
-# ImagineSoftware RAG Assistant
+# ImagineSoftware Digital Consultant
 
 ![banner_image](public/imagine-preview.png)
 
