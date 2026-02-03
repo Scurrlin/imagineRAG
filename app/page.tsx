@@ -91,7 +91,7 @@ export default function Home() {
 			const player = playerInstanceRef.current;
 			const currentTime = player.getCurrentTime();
 			const duration = player.getDuration();
-			const timeUntilFade = (duration - currentTime - 0.1) * 1000;
+			const timeUntilFade = (duration - currentTime - 0.5) * 1000;
 			
 			if (endTimeoutRef.current) clearTimeout(endTimeoutRef.current);
 			if (timeUntilFade > 0) {
