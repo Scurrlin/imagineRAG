@@ -33,7 +33,7 @@ export default function ChatInput({
 	};
 
 	return (
-		<div className="border-t border-gray-200 p-4 bg-gray-50/80">
+		<div className="border-t border-[#0A5A7C] p-4 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3]">
 			<form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
 				<div className="w-full sm:flex-1">
 					<textarea
@@ -42,7 +42,7 @@ export default function ChatInput({
 						onKeyDown={handleKeyDown}
 						placeholder="Describe your business challenge here..."
 						maxLength={400}
-						className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
+						className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-white focus:ring-2 focus:ring-white/40 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
 						disabled={isLoading}
 						rows={3}
 					/>
@@ -51,7 +51,7 @@ export default function ChatInput({
 					<button
 						type="submit"
 						disabled={isLoading || !input.trim()}
-						className="flex-1 px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+						className="flex-1 px-6 py-3 bg-[#0A5A7C] text-white rounded-xl font-medium hover:bg-[#084a68] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 					>
 						{isLoading ? 'Sending...' : 'Send'}
 					</button>
@@ -68,7 +68,7 @@ export default function ChatInput({
 			{input.length > 320 && (
 				<div
 					className={`text-center text-xs mt-2 ${
-						input.length >= 400 ? 'text-red-500' : 'text-gray-400'
+						input.length >= 400 ? 'text-red-300' : 'text-white/70'
 					}`}
 				>
 					Maximum characters 400: {input.length}/400
