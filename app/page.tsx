@@ -92,8 +92,8 @@ export default function Home() {
 			const player = playerInstanceRef.current;
 			const currentTime = player.getCurrentTime();
 			const duration = player.getDuration();
-			const timeUntilFadeOut = (duration - currentTime - 2) * 1000; // Video fades out 2s before end
-			const timeUntilOverlay = (duration - currentTime - 1) * 1000; // Overlay fades in 1s before end
+			const timeUntilFadeOut = (duration - currentTime - 1) * 1000; // Video fades out 1s before end
+			const timeUntilOverlay = (duration - currentTime - 0.5) * 1000; // Overlay fades in 0.5s before end
 			
 			// Clear existing timeouts
 			if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
