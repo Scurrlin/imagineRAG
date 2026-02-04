@@ -118,19 +118,46 @@ export default function Home() {
 	};
 
 	return (
-		<div
-			className="min-h-screen"
-			style={{
-				backgroundImage: 'url(/background.jpg)',
-				backgroundSize: 'cover',
-				backgroundPosition: 'center',
-				backgroundRepeat: 'no-repeat',
-				backgroundAttachment: 'scroll',
-			}}
-		>
+		<div className="min-h-screen relative">
+			{/* CSS Sky & Clouds Background */}
+			<div
+				className="fixed inset-0 z-0"
+				style={{
+					background: `
+						/* Cloud layer 1 - large fluffy clouds at bottom */
+						radial-gradient(ellipse 120% 60% at 10% 105%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 30%, transparent 60%),
+						radial-gradient(ellipse 100% 50% at 30% 100%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 25%, transparent 55%),
+						radial-gradient(ellipse 140% 55% at 60% 108%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 30%, transparent 58%),
+						radial-gradient(ellipse 90% 45% at 85% 102%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 28%, transparent 52%),
+						radial-gradient(ellipse 110% 50% at 95% 105%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 25%, transparent 50%),
+						
+						/* Cloud layer 2 - mid clouds with slight gray tint */
+						radial-gradient(ellipse 80% 35% at 20% 95%, rgba(240,245,250,0.8) 0%, rgba(230,238,245,0.5) 30%, transparent 55%),
+						radial-gradient(ellipse 70% 30% at 50% 92%, rgba(245,248,252,0.75) 0%, rgba(235,242,248,0.4) 28%, transparent 50%),
+						radial-gradient(ellipse 85% 38% at 75% 96%, rgba(240,246,250,0.8) 0%, rgba(228,238,246,0.5) 32%, transparent 55%),
+						
+						/* Cloud wisps - higher, thinner clouds */
+						radial-gradient(ellipse 60% 15% at 15% 75%, rgba(255,255,255,0.4) 0%, transparent 50%),
+						radial-gradient(ellipse 50% 12% at 45% 70%, rgba(255,255,255,0.35) 0%, transparent 45%),
+						radial-gradient(ellipse 55% 14% at 80% 72%, rgba(255,255,255,0.38) 0%, transparent 48%),
+						
+						/* Sky gradient - blue tones matching brand */
+						linear-gradient(to bottom, 
+							#0A5A7C 0%, 
+							#1a6d8f 15%,
+							#3d8db5 35%, 
+							#4B9CD3 50%,
+							#6eb5e0 65%,
+							#a8d4ef 80%,
+							#d0e8f5 90%,
+							#e8f4fa 100%
+						)
+					`,
+				}}
+			/>
 
 			{/* Content */}
-			<div className="max-w-4xl mx-auto px-4 pb-4">
+			<div className="relative z-10 max-w-4xl mx-auto px-4 pb-4">
 				{/* Header */}
 				<div className="text-center mb-4">
 					<div className="flex justify-center mb-3">
