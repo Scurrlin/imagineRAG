@@ -33,7 +33,7 @@ export default function ChatInput({
 	};
 
 	return (
-		<div className="border-t border-[#0A5A7C] p-4 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3]">
+		<div className="p-4 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
 			<form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
 				<div className="w-full sm:flex-1">
 					<textarea
@@ -59,7 +59,7 @@ export default function ChatInput({
 						type="button"
 						onClick={onClear}
 						disabled={isLoading || !hasMessages}
-						className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
+						className="flex-1 px-6 py-3 bg-[#0A5A7C] text-white rounded-xl font-medium hover:bg-[#084a68] disabled:bg-gray-300 disabled:text-white disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 					>
 						Clear
 					</button>
