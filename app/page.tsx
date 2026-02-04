@@ -118,10 +118,10 @@ export default function Home() {
 	};
 
 	return (
-		<div className="min-h-screen relative">
+		<div className="min-h-screen min-h-[100dvh] relative">
 			{/* Background Image */}
 			<div
-				className="fixed inset-0 z-0"
+				className="fixed inset-0 z-0 min-h-screen min-h-[100dvh]"
 				style={{
 					backgroundImage: 'url(/background.jpg)',
 					backgroundSize: 'cover',

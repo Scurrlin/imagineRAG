@@ -51,7 +51,7 @@ export default function ChatInput({
 					<button
 						type="submit"
 						disabled={isLoading || !input.trim()}
-						className="flex-1 px-6 py-3 bg-[#0A5A7C] text-white rounded-xl font-medium hover:bg-[#084a68] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+						className="flex-1 px-6 py-3 bg-white text-[#0A5A7C] rounded-xl font-medium disabled:bg-white disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 					>
 						{isLoading ? 'Sending...' : 'Send'}
 					</button>
@@ -59,7 +59,7 @@ export default function ChatInput({
 						type="button"
 						onClick={onClear}
 						disabled={isLoading || !hasMessages}
-						className="flex-1 px-6 py-3 bg-[#0A5A7C] text-white rounded-xl font-medium hover:bg-[#084a68] disabled:bg-gray-300 disabled:text-white disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
+						className="flex-1 px-6 py-3 bg-white text-[#0A5A7C] rounded-xl font-medium disabled:bg-white disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
 					>
 						Clear
 					</button>
