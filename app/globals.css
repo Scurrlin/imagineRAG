@@ -19,11 +19,6 @@
 	--gray-900: #212529;
 }
 
-html, body {
-	height: 100%;
-	overflow: hidden;
-}
-
 body {
 	color: var(--foreground);
 	background: var(--background);
@@ -109,29 +104,17 @@ body {
 	animation: fade-out 0.5s ease forwards;
 }
 
-/* Height warning overlay */
-.height-warning {
+/* Height notice - hidden by default */
+.height-notice {
 	display: none;
-	position: fixed;
-	inset: 0;
-	z-index: 9999;
-	background: black;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 1.5rem;
-	padding: 2rem;
-	text-align: center;
 }
 
-.height-warning p {
-	color: white;
-	font-size: 1.125rem;
-	font-weight: 500;
-}
-
+/* Show notice when screen height is less than 500px */
 @media (max-height: 500px) {
-	.height-warning {
+	.height-notice {
 		display: flex;
+	}
+	.main-content {
+		display: none;
 	}
 }

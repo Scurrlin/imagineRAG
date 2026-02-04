@@ -121,12 +121,28 @@ export default function Home() {
 		<div className="min-h-screen relative">
 			{/* Background Image */}
 			<div
-				className="fixed inset-0 z-0 bg-[#4B9CD3]"
+				className="fixed inset-0 z-0"
 				style={{
 					backgroundImage: 'url(/background.jpg)',
 					backgroundSize: 'cover',
-					backgroundPosition: 'center top',
+					backgroundPosition: 'center',
 					backgroundRepeat: 'no-repeat',
+				}}
+			/>
+
+			{/* Bottom gradient melt - mobile only */}
+			<div
+				className="fixed bottom-0 left-0 right-0 h-[60px] z-[5]"
+				style={{
+					background:
+						'linear-gradient(to bottom, ' +
+						'transparent 0%, ' +
+						'rgba(245, 247, 250, 0.25) 25%, ' +
+						'rgba(245, 247, 250, 0.75) 30%, ' +
+						'#f5f7fa 33.33%, ' +
+						'#f5f7fa 100%' +
+						')',
+					transform: 'translateY(30px)',
 				}}
 			/>
 

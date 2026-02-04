@@ -71,12 +71,20 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body>
-				{/* Height warning overlay - shown via CSS when height < 500px */}
-				<div className='height-warning'>
-					<img src='/imagine_logo.svg' alt='ImagineSoftware' width={280} height={60} />
-					<p>Please increase your screen height to &gt;500px</p>
+				{/* Height notice - shown when screen height < 500px */}
+				<div className='height-notice fixed inset-0 z-50 bg-black flex-col items-center justify-center gap-6 p-8'>
+					<img
+						src='/imagine_logo.svg'
+						alt='ImagineSoftware'
+						className='w-64 h-auto'
+					/>
+					<p className='text-white text-center text-lg'>
+						Please increase your screen height
+					</p>
 				</div>
-				<main className='pt-16'>{children}</main>
+
+				{/* Main content - hidden when screen height < 500px */}
+				<main className='main-content pt-16'>{children}</main>
 			</body>
 		</html>
 	);
