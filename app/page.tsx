@@ -118,20 +118,19 @@ export default function Home() {
 	};
 
 	return (
-		<div className="min-h-screen min-h-[100dvh] relative">
-			{/* Background Image */}
-			<div
-				className="fixed inset-0 z-0 min-h-screen min-h-[100dvh]"
-				style={{
-					backgroundImage: 'url(/background.jpg)',
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					backgroundRepeat: 'no-repeat',
-				}}
-			/>
+		<div
+			className="min-h-screen"
+			style={{
+				backgroundImage: 'url(/background.jpg)',
+				backgroundSize: 'cover',
+				backgroundPosition: 'center',
+				backgroundRepeat: 'no-repeat',
+				backgroundAttachment: 'scroll',
+			}}
+		>
 
 			{/* Content */}
-			<div className="relative z-10 max-w-4xl mx-auto px-4 pb-4">
+			<div className="max-w-4xl mx-auto px-4 pb-4">
 				{/* Header */}
 				<div className="text-center mb-4">
 					<div className="flex justify-center mb-3">
