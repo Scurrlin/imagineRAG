@@ -372,10 +372,12 @@ export default function Home() {
 										</div>
 									) : (
 										<div className="aspect-video relative">
+										<div className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}>
 											<div
 												ref={youtubePlayerRef}
-												className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}
+												className="w-full h-full"
 											/>
+										</div>
 											{/* Replay overlay - only shows when video ends */}
 											{videoEnded && (
 												<div className="absolute inset-0 bg-black flex items-center justify-center gap-6 p-4 animate-fade-in">
