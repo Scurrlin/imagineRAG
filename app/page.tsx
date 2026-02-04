@@ -46,9 +46,9 @@ export default function Home() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [showYouTube, setShowYouTube] = useState(false);
+	const [videoFadingOut, setVideoFadingOut] = useState(false);
 	const [videoEnded, setVideoEnded] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const youtubePlayerRef = useRef<HTMLDivElement>(null);
 	const playerInstanceRef = useRef<YTPlayer | null>(null);
 
@@ -83,7 +83,8 @@ export default function Home() {
 	}, [messages]);
 
 	// Handle YouTube player state change
-	const endTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const fadeOutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const overlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const onPlayerStateChange = useCallback((event: { data: number }) => {
 		// PlayerState.PLAYING === 1
@@ -91,18 +92,31 @@ export default function Home() {
 			const player = playerInstanceRef.current;
 			const currentTime = player.getCurrentTime();
 			const duration = player.getDuration();
-			const timeUntilFade = (duration - currentTime - 0.5) * 1000;
+			const timeUntilFadeOut = (duration - currentTime - 1) * 1000; // Video fades out 1s before end
+			const timeUntilOverlay = (duration - currentTime - 0.5) * 1000; // Overlay fades in 0.5s before end
 			
-			if (endTimeoutRef.current) clearTimeout(endTimeoutRef.current);
-			if (timeUntilFade > 0) {
-				endTimeoutRef.current = setTimeout(() => setVideoEnded(true), timeUntilFade);
+			// Clear existing timeouts
+			if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
+			if (overlayTimeoutRef.current) clearTimeout(overlayTimeoutRef.current);
+			
+			// Set timeout for fade-out
+			if (timeUntilFadeOut > 0) {
+				fadeOutTimeoutRef.current = setTimeout(() => setVideoFadingOut(true), timeUntilFadeOut);
+			}
+			// Set timeout for overlay fade-in
+			if (timeUntilOverlay > 0) {
+				overlayTimeoutRef.current = setTimeout(() => setVideoEnded(true), timeUntilOverlay);
 			}
 		}
-		// PlayerState.PAUSED === 2, PlayerState.ENDED === 0 - clear timeout
+		// PlayerState.PAUSED === 2, PlayerState.ENDED === 0 - clear timeouts
 		if (event.data === 2 || event.data === 0) {
-			if (endTimeoutRef.current) {
-				clearTimeout(endTimeoutRef.current);
-				endTimeoutRef.current = null;
+			if (fadeOutTimeoutRef.current) {
+				clearTimeout(fadeOutTimeoutRef.current);
+				fadeOutTimeoutRef.current = null;
+			}
+			if (overlayTimeoutRef.current) {
+				clearTimeout(overlayTimeoutRef.current);
+				overlayTimeoutRef.current = null;
 			}
 		}
 	}, []);
@@ -145,9 +159,13 @@ export default function Home() {
 		}
 
 		return () => {
-			if (endTimeoutRef.current) {
-				clearTimeout(endTimeoutRef.current);
-				endTimeoutRef.current = null;
+			if (fadeOutTimeoutRef.current) {
+				clearTimeout(fadeOutTimeoutRef.current);
+				fadeOutTimeoutRef.current = null;
+			}
+			if (overlayTimeoutRef.current) {
+				clearTimeout(overlayTimeoutRef.current);
+				overlayTimeoutRef.current = null;
 			}
 			if (playerInstanceRef.current) {
 				playerInstanceRef.current.destroy();
@@ -256,8 +274,6 @@ export default function Home() {
 		}
 	};
 
-	const allMessages = messages;
-
 	return (
 		<div className="min-h-screen relative">
 			{/* Background Image */}
@@ -299,8 +315,8 @@ export default function Home() {
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
 					{/* Messages Area */}
-					<div className={`p-3 sm:p-4 space-y-3 ${allMessages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
-						{allMessages.length === 0 && (
+					<div className={`p-3 sm:p-4 space-y-3 ${messages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
+						{messages.length === 0 && (
 							<div className="text-center py-3 sm:py-4">
 								<h3 className="text-xl font-medium text-gray-700 mb-3">
 									How can we help your practice?
@@ -358,7 +374,7 @@ export default function Home() {
 										<div className="aspect-video relative">
 											<div
 												ref={youtubePlayerRef}
-												className="w-full h-full"
+												className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}
 											/>
 											{/* Replay overlay - only shows when video ends */}
 											{videoEnded && (
@@ -376,6 +392,7 @@ export default function Home() {
 														<div
 															className="cursor-pointer hover:opacity-80 transition-opacity"
 															onClick={() => {
+																setVideoFadingOut(false);
 																setVideoEnded(false);
 																// Player will reinitialize via useEffect
 															}}
@@ -411,7 +428,7 @@ export default function Home() {
 							</div>
 						)}
 
-						{allMessages.map((message) => (
+						{messages.map((message) => (
 							<div
 								key={message.id}
 								className={`flex ${
@@ -468,7 +485,6 @@ export default function Home() {
 						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
 							<div className="w-full sm:flex-1">
 								<textarea
-									ref={textareaRef}
 									value={input}
 									onChange={handleTextareaChange}
 									onKeyDown={handleKeyDown}
@@ -492,6 +508,7 @@ export default function Home() {
 									onClick={() => {
 										setMessages([]);
 										setShowYouTube(false);
+										setVideoFadingOut(false);
 										setVideoEnded(false);
 									}}
 									disabled={isLoading || messages.length === 0}
