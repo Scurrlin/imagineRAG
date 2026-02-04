@@ -130,22 +130,6 @@ export default function Home() {
 				}}
 			/>
 
-			{/* Bottom gradient melt - mobile only */}
-			<div
-				className="fixed bottom-0 left-0 right-0 h-[60px] z-[5]"
-				style={{
-					background:
-						'linear-gradient(to bottom, ' +
-						'transparent 0%, ' +
-						'rgba(245, 247, 250, 0.25) 25%, ' +
-						'rgba(245, 247, 250, 0.75) 30%, ' +
-						'#f5f7fa 33.33%, ' +
-						'#f5f7fa 100%' +
-						')',
-					transform: 'translateY(30px)',
-				}}
-			/>
-
 			{/* Content */}
 			<div className="relative z-10 max-w-4xl mx-auto px-4 pb-4">
 				{/* Header */}
@@ -199,6 +183,21 @@ export default function Home() {
 					>
 						<img src="/favicon.png" alt="" className="w-6 h-6" />
 						Schedule a Demo
+					</a>
+				</div>
+
+				{/* Mobile Footer - fills extra white space on mobile */}
+				<div className="flex justify-center items-center py-8 mt-4 sm:hidden">
+					<a
+						href="https://imagineteam.com/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<img
+							src="/imagine-logo-black.svg"
+							alt="ImagineSoftware"
+							className="w-40 h-auto opacity-70"
+						/>
 					</a>
 				</div>
 			</div>

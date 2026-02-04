@@ -72,13 +72,13 @@ export default function RootLayout({
 		<html lang='en'>
 			<body>
 				{/* Height notice - shown when screen height < 500px */}
-				<div className='height-notice fixed inset-0 z-50 bg-black flex-col items-center justify-center gap-6 p-8'>
+				<div className='height-notice fixed inset-0 z-50 bg-white flex-col items-center justify-center gap-6 p-8'>
 					<img
-						src='/imagine_logo.svg'
+						src='/imagine-logo-black.svg'
 						alt='ImagineSoftware'
 						className='w-64 h-auto'
 					/>
-					<p className='text-white text-center text-lg'>
+					<p className='text-black text-center text-lg'>
 						Please increase your screen height
 					</p>
 				</div>
