@@ -71,6 +71,11 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body>
+				{/* Height warning overlay - shown via CSS when height < 500px */}
+				<div className='height-warning'>
+					<img src='/imagine_logo.svg' alt='ImagineSoftware' width={280} height={60} />
+					<p>Please increase your screen height to &gt;500px</p>
+				</div>
 				<main className='pt-16'>{children}</main>
 			</body>
 		</html>
