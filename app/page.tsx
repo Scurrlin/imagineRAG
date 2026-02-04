@@ -1,178 +1,21 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useState } from 'react';
 import Image from 'next/image';
-
-// YouTube IFrame API types
-interface YTPlayer {
-	destroy: () => void;
-	getCurrentTime: () => number;
-	getDuration: () => number;
-}
-
-interface YTPlayerOptions {
-	videoId: string;
-	playerVars?: {
-		autoplay?: number;
-		modestbranding?: number;
-		rel?: number;
-	};
-	events?: {
-		onStateChange?: (event: { data: number }) => void;
-	};
-}
-
-interface YTNamespace {
-	Player: new (element: HTMLElement, options: YTPlayerOptions) => YTPlayer;
-}
-
-// Extend Window interface for YouTube API
-declare global {
-	interface Window {
-		YT: YTNamespace;
-		onYouTubeIframeAPIReady: () => void;
-	}
-}
-
-interface Message {
-	id: string;
-	role: 'user' | 'assistant';
-	content: string;
-}
+import { Message } from './components/types';
+import ChatMessages from './components/ChatMessages';
+import ChatInput from './components/ChatInput';
 
 export default function Home() {
 	const [input, setInput] = useState('');
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [showYouTube, setShowYouTube] = useState(false);
-	const [videoFadingOut, setVideoFadingOut] = useState(false);
-	const [videoEnded, setVideoEnded] = useState(false);
-	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const youtubePlayerRef = useRef<HTMLDivElement>(null);
-	const playerInstanceRef = useRef<YTPlayer | null>(null);
 
-	// Handle textarea change
-	const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setInput(e.target.value);
+	const handleClear = () => {
+		setMessages([]);
+		setShowYouTube(false);
 	};
-
-	// Handle Enter key (submit on Enter, new line on Shift+Enter)
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault();
-			if (input.trim() && !isLoading) {
-				handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-			}
-		}
-	};
-
-	// Stop video 0.6 seconds before it ends
-	const handleVideoTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-		const video = e.currentTarget;
-		if (video.duration && video.currentTime >= video.duration - 0.6) {
-			video.pause();
-		}
-	};
-
-	// Auto-scroll to bottom of messages (only when there are messages)
-	useEffect(() => {
-		if (messages.length > 0) {
-			messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-		}
-	}, [messages]);
-
-	// Handle YouTube player state change
-	const fadeOutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-	const overlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-	const onPlayerStateChange = useCallback((event: { data: number }) => {
-		// PlayerState.PLAYING === 1
-		if (event.data === 1 && playerInstanceRef.current) {
-			const player = playerInstanceRef.current;
-			const currentTime = player.getCurrentTime();
-			const duration = player.getDuration();
-			const timeUntilFadeOut = (duration - currentTime - 1) * 1000; // Video fades out 1s before end
-			const timeUntilOverlay = (duration - currentTime - 0.5) * 1000; // Overlay fades in 0.5s before end
-			
-			// Clear existing timeouts
-			if (fadeOutTimeoutRef.current) clearTimeout(fadeOutTimeoutRef.current);
-			if (overlayTimeoutRef.current) clearTimeout(overlayTimeoutRef.current);
-			
-			// Set timeout for fade-out
-			if (timeUntilFadeOut > 0) {
-				fadeOutTimeoutRef.current = setTimeout(() => setVideoFadingOut(true), timeUntilFadeOut);
-			}
-			// Set timeout for overlay fade-in
-			if (timeUntilOverlay > 0) {
-				overlayTimeoutRef.current = setTimeout(() => setVideoEnded(true), timeUntilOverlay);
-			}
-		}
-		// PlayerState.PAUSED === 2, PlayerState.ENDED === 0 - clear timeouts
-		if (event.data === 2 || event.data === 0) {
-			if (fadeOutTimeoutRef.current) {
-				clearTimeout(fadeOutTimeoutRef.current);
-				fadeOutTimeoutRef.current = null;
-			}
-			if (overlayTimeoutRef.current) {
-				clearTimeout(overlayTimeoutRef.current);
-				overlayTimeoutRef.current = null;
-			}
-		}
-	}, []);
-
-	// Initialize YouTube player when showYouTube becomes true
-	useEffect(() => {
-		if (!showYouTube || videoEnded) return;
-
-		const initPlayer = () => {
-			if (youtubePlayerRef.current && window.YT && window.YT.Player) {
-				// Destroy existing player if any
-				if (playerInstanceRef.current) {
-					playerInstanceRef.current.destroy();
-				}
-				
-				playerInstanceRef.current = new window.YT.Player(youtubePlayerRef.current, {
-					videoId: 'fCiN0crOXtM',
-					playerVars: {
-						autoplay: 1,
-						modestbranding: 1,
-						rel: 0,
-					},
-					events: {
-						onStateChange: onPlayerStateChange,
-					},
-				});
-			}
-		};
-
-		// Load YouTube IFrame API if not already loaded
-		if (!window.YT) {
-			const tag = document.createElement('script');
-			tag.src = 'https://www.youtube.com/iframe_api';
-			const firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-			
-			window.onYouTubeIframeAPIReady = initPlayer;
-		} else {
-			initPlayer();
-		}
-
-		return () => {
-			if (fadeOutTimeoutRef.current) {
-				clearTimeout(fadeOutTimeoutRef.current);
-				fadeOutTimeoutRef.current = null;
-			}
-			if (overlayTimeoutRef.current) {
-				clearTimeout(overlayTimeoutRef.current);
-				overlayTimeoutRef.current = null;
-			}
-			if (playerInstanceRef.current) {
-				playerInstanceRef.current.destroy();
-				playerInstanceRef.current = null;
-			}
-		};
-	}, [showYouTube, videoEnded, onPlayerStateChange]);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -277,7 +120,7 @@ export default function Home() {
 	return (
 		<div className="min-h-screen relative">
 			{/* Background Image */}
-			<div 
+			<div
 				className="fixed inset-0 z-0"
 				style={{
 					backgroundImage: 'url(/background.jpg)',
@@ -314,218 +157,20 @@ export default function Home() {
 
 				{/* Chat Container */}
 				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
-					{/* Messages Area */}
-					<div className={`p-3 sm:p-4 space-y-3 ${messages.length === 0 ? 'min-h-0 overflow-hidden' : 'h-[400px] sm:h-[450px] overflow-y-auto'}`}>
-						{messages.length === 0 && (
-							<div className="text-center py-3 sm:py-4">
-								<h3 className="text-xl font-medium text-gray-700 mb-3">
-									How can we help your practice?
-								</h3>
-								<p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed mb-6">
-									Tell us about your revenue cycle challenges, billing issues, 
-									or operational goals. We&apos;re here to help you optimize your 
-									healthcare business.
-								</p>
-								<div className="relative rounded-xl overflow-hidden shadow-lg max-w-full sm:max-w-lg mx-auto bg-black">
-									{!showYouTube ? (
-										<div
-											onClick={() => setShowYouTube(true)}
-											className="relative cursor-pointer group"
-											aria-label="Watch Video"
-										>
-											{/* Mobile: Static image in video-sized container */}
-											<div className="aspect-video block sm:hidden">
-												<img
-													src="/imagine-still.png"
-													alt="ImagineSoftware"
-													className="w-full h-full object-cover"
-												/>
-											</div>
-											{/* Desktop: Video */}
-											<video
-												width="1920"
-												height="1080"
-												autoPlay
-												muted
-												playsInline
-												onTimeUpdate={handleVideoTimeUpdate}
-												className="w-full h-auto hidden sm:block"
-											>
-												<source
-													src="https://imagineteam.com/wp-content/uploads/2025/04/ef4b-4206-b344-7937abcb4293.mp4"
-													type="video/mp4"
-												/>
-												Your browser does not support the video tag.
-											</video>
-											{/* Play button overlay */}
-											<div className="absolute inset-0 flex items-center justify-center bg-transparent group-hover:bg-black/30 transition-colors">
-												<div className="w-16 h-16 bg-[#4B9CD3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-													<svg
-														className="w-11 h-11 text-white"
-														fill="currentColor"
-														viewBox="0 0 24 24"
-													>
-														<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
-													</svg>
-												</div>
-											</div>
-										</div>
-									) : (
-										<div className="aspect-video relative">
-										<div className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}>
-											<div
-												ref={youtubePlayerRef}
-												className="w-full h-full"
-											/>
-										</div>
-											{/* Replay overlay - only shows when video ends */}
-											{videoEnded && (
-												<div className="absolute inset-0 bg-black flex items-center justify-center gap-6 p-4 animate-fade-in">
-													{/* Logo on the left */}
-													<div className="flex-1 flex items-center justify-center">
-														<img
-															src="/imagine-logo2.webp"
-															alt="ImagineSoftware 25 Years"
-															className="w-full max-w-[200px] h-auto rounded-xl border border-white/30"
-														/>
-													</div>
-													{/* Replay button and link on the right */}
-													<div className="flex-1 flex flex-col items-center justify-center">
-														<div
-															className="cursor-pointer hover:opacity-80 transition-opacity"
-															onClick={() => {
-																setVideoFadingOut(false);
-																setVideoEnded(false);
-																// Player will reinitialize via useEffect
-															}}
-														>
-															<svg
-																className="w-16 h-16 text-white"
-																fill="none"
-																stroke="currentColor"
-																strokeWidth={2}
-																viewBox="0 0 24 24"
-															>
-																<path
-																	strokeLinecap="round"
-																	strokeLinejoin="round"
-																	d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-																/>
-															</svg>
-														</div>
-													<a
-														href="https://imagineteam.com/contact-us/"
-														target="_blank"
-														rel="noopener noreferrer"
-														className="mt-4 px-5 py-2 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md whitespace-nowrap"
-													>
-														Contact Us
-													</a>
-													</div>
-												</div>
-											)}
-										</div>
-									)}
-								</div>
-							</div>
-						)}
-
-						{messages.map((message) => (
-							<div
-								key={message.id}
-								className={`flex ${
-									message.role === 'user'
-										? 'justify-end'
-										: 'justify-start'
-								}`}
-							>
-								<div
-									className={`max-w-[85%] rounded-2xl px-5 py-3 ${
-										message.role === 'user'
-											? 'bg-[#4B9CD3] text-white'
-											: 'bg-gray-100 text-gray-800'
-									}`}
-								>
-									{message.role === 'assistant' ? (
-										<div className="prose prose-sm max-w-none">
-											<ReactMarkdown>
-												{message.content || 'Thinking...'}
-											</ReactMarkdown>
-										</div>
-									) : (
-										<p className="whitespace-pre-wrap">
-											{message.content}
-										</p>
-									)}
-								</div>
-							</div>
-						))}
-
-						{isLoading && (
-							<div className="flex justify-start">
-								<div className="bg-gray-100 rounded-2xl px-5 py-3">
-									<div className="flex items-center space-x-2">
-										<div className="w-2 h-2 bg-[#4B9CD3] rounded-full animate-bounce" />
-										<div
-											className="w-2 h-2 bg-[#4B9CD3] rounded-full animate-bounce"
-											style={{ animationDelay: '0.1s' }}
-										/>
-										<div
-											className="w-2 h-2 bg-[#4B9CD3] rounded-full animate-bounce"
-											style={{ animationDelay: '0.2s' }}
-										/>
-									</div>
-								</div>
-							</div>
-						)}
-
-						<div ref={messagesEndRef} />
-					</div>
-
-					{/* Input Area */}
-					<div className="border-t border-gray-200 p-4 bg-gray-50/80">
-						<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
-							<div className="w-full sm:flex-1">
-								<textarea
-									value={input}
-									onChange={handleTextareaChange}
-									onKeyDown={handleKeyDown}
-									placeholder="Describe your business challenge here..."
-									maxLength={400}
-									className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#4B9CD3] focus:ring-2 focus:ring-[#4B9CD3]/20 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
-									disabled={isLoading}
-									rows={3}
-								/>
-							</div>
-							<div className="flex gap-3 sm:flex-col sm:w-[120px]">
-								<button
-									type="submit"
-									disabled={isLoading || !input.trim()}
-									className="flex-1 px-6 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-sm"
-								>
-									{isLoading ? 'Sending...' : 'Send'}
-								</button>
-								<button
-									type="button"
-									onClick={() => {
-										setMessages([]);
-										setShowYouTube(false);
-										setVideoFadingOut(false);
-										setVideoEnded(false);
-									}}
-									disabled={isLoading || messages.length === 0}
-									className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer transition-colors"
-								>
-									Clear
-								</button>
-							</div>
-						</form>
-						{input.length > 320 && (
-							<div className={`text-center text-xs mt-2 ${input.length >= 400 ? 'text-red-500' : 'text-gray-400'}`}>
-								Maximum characters 400: {input.length}/400
-							</div>
-						)}
-					</div>
+					<ChatMessages
+						messages={messages}
+						isLoading={isLoading}
+						showYouTube={showYouTube}
+						onPlayClick={() => setShowYouTube(true)}
+					/>
+					<ChatInput
+						input={input}
+						isLoading={isLoading}
+						hasMessages={messages.length > 0}
+						onInputChange={setInput}
+						onSubmit={handleSubmit}
+						onClear={handleClear}
+					/>
 				</div>
 
 				{/* Footer */}
@@ -536,11 +181,7 @@ export default function Home() {
 						rel="noopener noreferrer"
 						className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md"
 					>
-						<img
-							src="/favicon.png"
-							alt=""
-							className="w-6 h-6"
-						/>
+						<img src="/favicon.png" alt="" className="w-6 h-6" />
 						Schedule a Demo
 					</a>
 				</div>

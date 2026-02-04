@@ -135,6 +135,11 @@ app/
 │   ├── chat/                   # Main chat endpoint
 │   ├── guardrail/              # Query validation endpoint
 │   └── upload-document/        # Document upload API
+├── components/
+│   ├── ChatInput.tsx           # Input form with textarea and buttons
+│   ├── ChatMessages.tsx        # Message list and welcome content
+│   ├── types.ts                # TS types file
+│   └── VideoPlayer.tsx         # Video preview and YouTube player
 ├── libs/
 │   ├── cohere.ts               # Cohere re-ranking client
 │   ├── openai.ts               # OpenAI client configuration
