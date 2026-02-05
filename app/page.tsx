@@ -156,7 +156,7 @@ export default function Home() {
 				</div>
 
 				{/* Chat Container */}
-				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
+				<div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
 					<ChatMessages
 						messages={messages}
 						isLoading={isLoading}
