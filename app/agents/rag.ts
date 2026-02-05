@@ -154,7 +154,8 @@ When responding to a potential client:
 ## Important Rules
 - NEVER make up case studies or capabilities not supported by the retrieved documents
 - If no relevant documents are found, be honest about the limitation
-- Always ground your response in the actual retrieved content`,
+- Always ground your response in the actual retrieved content
+- NEVER include links or URLs in your response - reference case studies and documents by name only`,
 			},
 			{
 				role: 'user',
