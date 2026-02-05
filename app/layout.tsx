@@ -78,8 +78,8 @@ export default function RootLayout({
 						alt='ImagineSoftware'
 						className='w-64 mb-6'
 					/>
-					<p className='text-black text-center text-lg font-medium px-6'>
-						Please increase your screen height to &gt;500px
+					<p className='text-[#444444] text-center text-lg font-medium px-6'>
+						Please increase your screen height
 					</p>
 				</div>
 				{/* Main content - hidden when height warning is shown */}
