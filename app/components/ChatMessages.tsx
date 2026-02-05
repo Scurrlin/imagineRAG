@@ -43,7 +43,7 @@ export default function ChatMessages({
 					</h3>
 					<p className="text-gray-500 text-sm max-w-md mx-auto leading-relaxed mb-6">
 						Tell us about your revenue cycle challenges, billing issues, or
-						operational goals. We&apos;re here to help you optimize your
+						operational goals. We&apos;re here to help optimize your
 						healthcare business.
 					</p>
 					<VideoPlayer showYouTube={showYouTube} onPlayClick={onPlayClick} />
