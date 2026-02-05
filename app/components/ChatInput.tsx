@@ -40,7 +40,7 @@ export default function ChatInput({
 						value={input}
 						onChange={handleTextareaChange}
 						onKeyDown={handleKeyDown}
-						placeholder="Describe your business challenge here..."
+						placeholder="What's your biggest billing or revenue cycle challenge right now?"
 						maxLength={400}
 						className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-white focus:ring-2 focus:ring-white/40 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
 						disabled={isLoading}
