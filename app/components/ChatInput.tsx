@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useCallback } from 'react';
+
 interface ChatInputProps {
 	input: string;
 	isLoading: boolean;
@@ -17,6 +19,29 @@ export default function ChatInput({
 	onSubmit,
 	onClear,
 }: ChatInputProps) {
+	// Lock body scroll on mobile when input is focused
+	const lockScroll = useCallback(() => {
+		// Only apply on mobile/touch devices
+		if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+			document.body.style.overflow = 'hidden';
+			document.body.style.position = 'fixed';
+			document.body.style.width = '100%';
+			document.body.style.height = '100%';
+		}
+	}, []);
+
+	const unlockScroll = useCallback(() => {
+		document.body.style.overflow = '';
+		document.body.style.position = '';
+		document.body.style.width = '';
+		document.body.style.height = '';
+	}, []);
+
+	// Clean up scroll lock on unmount
+	useEffect(() => {
+		return () => unlockScroll();
+	}, [unlockScroll]);
+
 	// Handle textarea change
 	const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		onInputChange(e.target.value);
@@ -40,6 +65,8 @@ export default function ChatInput({
 						value={input}
 						onChange={handleTextareaChange}
 						onKeyDown={handleKeyDown}
+						onFocus={lockScroll}
+						onBlur={unlockScroll}
 						placeholder="Describe your business challenge here..."
 						maxLength={400}
 						className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-white focus:ring-2 focus:ring-white/40 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"

@@ -185,21 +185,6 @@ export default function Home() {
 						Schedule a Demo
 					</a>
 				</div>
-
-				{/* Mobile Footer - fills extra white space on mobile */}
-				<div className="flex justify-center items-center py-8 mt-4 sm:hidden">
-					<a
-						href="https://imagineteam.com/"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<img
-							src="/imagine-logo-black.svg"
-							alt="ImagineSoftware"
-							className="w-40 h-auto opacity-70"
-						/>
-					</a>
-				</div>
 			</div>
 		</div>
 	);

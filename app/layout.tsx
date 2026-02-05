@@ -70,20 +70,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body>
-				{/* Height notice - shown when screen height < 500px */}
-				<div className='height-notice fixed inset-0 z-50 bg-white flex-col items-center justify-center gap-6 p-8'>
+			<body className='bg-white'>
+				{/* Height warning - shows when viewport height < 500px */}
+				<div className='height-warning fixed inset-0 z-50 flex-col items-center justify-center bg-white hidden'>
 					<img
 						src='/imagine-logo-black.svg'
 						alt='ImagineSoftware'
-						className='w-64 h-auto'
+						className='w-64 mb-6'
 					/>
-					<p className='text-black text-center text-lg'>
-						Please increase your screen height
+					<p className='text-black text-center text-lg font-medium px-6'>
+						Please increase your screen height to &gt;500px
 					</p>
 				</div>
-
-				{/* Main content - hidden when screen height < 500px */}
+				{/* Main content - hidden when height warning is shown */}
 				<main className='main-content pt-16'>{children}</main>
 			</body>
 		</html>
