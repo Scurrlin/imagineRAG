@@ -33,7 +33,7 @@ export default function ChatInput({
 	};
 
 	return (
-		<div className="p-4 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3]">
+		<div className="p-4 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
 			<form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3 sm:items-stretch">
 				<div className="w-full sm:flex-1">
 					<textarea
