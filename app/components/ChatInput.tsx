@@ -1,5 +1,7 @@
 'use client';
 
+import { CHAT_CONFIG } from '@/app/config';
+
 interface ChatInputProps {
 	input: string;
 	isLoading: boolean;
@@ -41,7 +43,7 @@ export default function ChatInput({
 						onChange={handleTextareaChange}
 						onKeyDown={handleKeyDown}
 						placeholder="What's your biggest billing or revenue cycle challenge right now?"
-						maxLength={400}
+						maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
 						className="w-full h-full px-5 py-3 rounded-xl border border-gray-300 focus:border-white focus:ring-2 focus:ring-white/40 outline-none transition-all bg-white text-gray-800 placeholder-gray-400 resize-none"
 						disabled={isLoading}
 						rows={3}
@@ -65,13 +67,13 @@ export default function ChatInput({
 					</button>
 				</div>
 			</form>
-			{input.length > 320 && (
+			{input.length > CHAT_CONFIG.WARNING_THRESHOLD && (
 				<div
 					className={`text-center text-xs mt-2 ${
-						input.length >= 400 ? 'text-red-300' : 'text-white/70'
+						input.length >= CHAT_CONFIG.MAX_MESSAGE_LENGTH ? 'text-red-300' : 'text-white/70'
 					}`}
 				>
-					Maximum characters 400: {input.length}/400
+					Maximum characters {CHAT_CONFIG.MAX_MESSAGE_LENGTH}: {input.length}/{CHAT_CONFIG.MAX_MESSAGE_LENGTH}
 				</div>
 			)}
 		</div>

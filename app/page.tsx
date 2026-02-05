@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Message } from './components/types';
 import ChatMessages from './components/ChatMessages';
 import ChatInput from './components/ChatInput';
+import { EXTERNAL_LINKS } from './config';
 
 export default function Home() {
 	const [input, setInput] = useState('');
@@ -12,14 +13,32 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [showYouTube, setShowYouTube] = useState(false);
 
+	// Track current request to handle race conditions
+	const abortControllerRef = useRef<AbortController | null>(null);
+
 	const handleClear = () => {
+		// Abort any in-flight request
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+			abortControllerRef.current = null;
+		}
 		setMessages([]);
 		setShowYouTube(false);
+		setIsLoading(false);
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!input.trim() || isLoading) return;
+
+		// Abort any previous request
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+
+		// Create new abort controller for this request
+		const abortController = new AbortController();
+		abortControllerRef.current = abortController;
 
 		const userInput = input;
 		setInput('');
@@ -42,7 +61,11 @@ export default function Home() {
 				body: JSON.stringify({
 					messages: [{ role: 'user', content: userInput }],
 				}),
+				signal: abortController.signal,
 			});
+
+			// Check if aborted
+			if (abortController.signal.aborted) return;
 
 			const guardrailResult = await guardrailResponse.json();
 
@@ -66,7 +89,11 @@ export default function Home() {
 				body: JSON.stringify({
 					messages: [{ role: 'user', content: userInput }],
 				}),
+				signal: abortController.signal,
 			});
+
+			// Check if aborted
+			if (abortController.signal.aborted) return;
 
 			if (!response.ok) {
 				throw new Error('Chat API error');
@@ -86,6 +113,12 @@ export default function Home() {
 
 			if (reader) {
 				while (true) {
+					// Check if aborted before reading
+					if (abortController.signal.aborted) {
+						reader.cancel();
+						return;
+					}
+
 					const { done, value } = await reader.read();
 					if (done) break;
 
@@ -103,7 +136,11 @@ export default function Home() {
 				}
 			}
 		} catch (error) {
-			console.error('Error in chat:', error);
+			// Ignore abort errors
+			if (error instanceof Error && error.name === 'AbortError') {
+				return;
+			}
+
 			setMessages((prev) => [
 				...prev,
 				{
@@ -113,7 +150,11 @@ export default function Home() {
 				},
 			]);
 		} finally {
-			setIsLoading(false);
+			// Only update loading state if this is still the current request
+			if (abortControllerRef.current === abortController) {
+				setIsLoading(false);
+				abortControllerRef.current = null;
+			}
 		}
 	};
 
@@ -121,13 +162,8 @@ export default function Home() {
 		<div className="min-h-screen relative">
 			{/* Background Image */}
 			<div
-				className="fixed inset-0 z-0"
-				style={{
-					backgroundImage: 'url(/background.jpg)',
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					backgroundRepeat: 'no-repeat',
-				}}
+				className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+				style={{ backgroundImage: 'url(/background.jpg)' }}
 			/>
 
 			{/* Content */}
@@ -136,7 +172,7 @@ export default function Home() {
 				<div className="text-center mb-4">
 					<div className="flex justify-center mb-3">
 						<a
-							href="https://imagineteam.com/"
+							href={EXTERNAL_LINKS.HOME_PAGE}
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -176,7 +212,7 @@ export default function Home() {
 				{/* Footer */}
 				<div className="flex justify-center mt-4">
 					<a
-						href="https://imagineteam.com/imagineone/"
+						href={EXTERNAL_LINKS.DEMO_PAGE}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md"

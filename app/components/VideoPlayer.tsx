@@ -2,13 +2,17 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { YTPlayer } from './types';
+import { VIDEO_CONFIG, EXTERNAL_LINKS } from '@/app/config';
 
 interface VideoPlayerProps {
 	showYouTube: boolean;
 	onPlayClick: () => void;
 }
 
-export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerProps) {
+export default function VideoPlayer({
+	showYouTube,
+	onPlayClick,
+}: VideoPlayerProps) {
 	const [videoFadingOut, setVideoFadingOut] = useState(false);
 	const [videoEnded, setVideoEnded] = useState(false);
 	const youtubePlayerRef = useRef<HTMLDivElement>(null);
@@ -40,11 +44,17 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 
 			// Set timeout for fade-out
 			if (timeUntilFadeOut > 0) {
-				fadeOutTimeoutRef.current = setTimeout(() => setVideoFadingOut(true), timeUntilFadeOut);
+				fadeOutTimeoutRef.current = setTimeout(
+					() => setVideoFadingOut(true),
+					timeUntilFadeOut
+				);
 			}
 			// Set timeout for overlay fade-in
 			if (timeUntilOverlay > 0) {
-				overlayTimeoutRef.current = setTimeout(() => setVideoEnded(true), timeUntilOverlay);
+				overlayTimeoutRef.current = setTimeout(
+					() => setVideoEnded(true),
+					timeUntilOverlay
+				);
 			}
 		}
 		// PlayerState.PAUSED === 2, PlayerState.ENDED === 0 - clear timeouts
@@ -71,17 +81,20 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 					playerInstanceRef.current.destroy();
 				}
 
-				playerInstanceRef.current = new window.YT.Player(youtubePlayerRef.current, {
-					videoId: 'fCiN0crOXtM',
-					playerVars: {
-						autoplay: 1,
-						modestbranding: 1,
-						rel: 0,
-					},
-					events: {
-						onStateChange: onPlayerStateChange,
-					},
-				});
+				playerInstanceRef.current = new window.YT.Player(
+					youtubePlayerRef.current,
+					{
+						videoId: VIDEO_CONFIG.YOUTUBE_VIDEO,
+						playerVars: {
+							autoplay: 1,
+							modestbranding: 1,
+							rel: 0,
+						},
+						events: {
+							onStateChange: onPlayerStateChange,
+						},
+					}
+				);
 			}
 		};
 
@@ -120,18 +133,37 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 		// Player will reinitialize via useEffect
 	};
 
+	// Handle keyboard events for replay button
+	const handleReplayKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			handleReplay();
+		}
+	};
+
+	// Handle keyboard events for play button
+	const handlePlayKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			onPlayClick();
+		}
+	};
+
 	return (
 		<div className="relative rounded-xl overflow-hidden shadow-lg max-w-full sm:max-w-lg mx-auto bg-black">
 			{!showYouTube ? (
 				<div
 					onClick={onPlayClick}
+					onKeyDown={handlePlayKeyDown}
 					className="relative cursor-pointer group"
-					aria-label="Watch Video"
+					role="button"
+					tabIndex={0}
+					aria-label="Play video about ImagineSoftware"
 				>
 					{/* Mobile: Static image in video-sized container */}
 					<div className="aspect-video block sm:hidden">
 						<img
-							src="/imagine-still.png"
+							src={VIDEO_CONFIG.MOBILE_PREVIEW}
 							alt="ImagineSoftware"
 							className="w-full h-full object-cover"
 						/>
@@ -146,19 +178,17 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 						onTimeUpdate={handleVideoTimeUpdate}
 						className="w-full h-auto hidden sm:block"
 					>
-						<source
-							src="https://imagineteam.com/wp-content/uploads/2025/04/ef4b-4206-b344-7937abcb4293.mp4"
-							type="video/mp4"
-						/>
+						<source src={VIDEO_CONFIG.PREVIEW_VIDEO} type="video/mp4" />
 						Your browser does not support the video tag.
 					</video>
 					{/* Play button overlay */}
 					<div className="absolute inset-0 flex items-center justify-center bg-transparent group-hover:bg-black/30 transition-colors">
-						<div className="w-16 h-16 bg-[#4B9CD3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+						<div className="w-16 h-16 bg-[#4B9CD3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
 							<svg
 								className="w-11 h-11 text-white"
 								fill="currentColor"
 								viewBox="0 0 24 24"
+								aria-hidden="true"
 							>
 								<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
 							</svg>
@@ -167,11 +197,10 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 				</div>
 			) : (
 				<div className="aspect-video relative">
-					<div className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}>
-						<div
-							ref={youtubePlayerRef}
-							className="w-full h-full"
-						/>
+					<div
+						className={`w-full h-full ${videoFadingOut ? 'animate-fade-out' : ''}`}
+					>
+						<div ref={youtubePlayerRef} className="w-full h-full" />
 					</div>
 					{/* Replay overlay - only shows when video ends */}
 					{videoEnded && (
@@ -179,16 +208,18 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 							{/* Logo on the left */}
 							<div className="flex-1 flex items-center justify-center">
 								<img
-									src="/imagine-logo2.webp"
+									src={VIDEO_CONFIG.REPLAY_LOGO}
 									alt="ImagineSoftware 25 Years"
 									className="w-full max-w-[200px] h-auto rounded-xl border border-white/30"
 								/>
 							</div>
 							{/* Replay button and link on the right */}
 							<div className="flex-1 flex flex-col items-center justify-center">
-								<div
-									className="cursor-pointer hover:opacity-80 transition-opacity"
+								<button
 									onClick={handleReplay}
+									onKeyDown={handleReplayKeyDown}
+									className="cursor-pointer hover:opacity-80 transition-opacity bg-transparent border-none p-2 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full"
+									aria-label="Replay video"
 								>
 									<svg
 										className="w-16 h-16 text-white"
@@ -196,6 +227,7 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 										stroke="currentColor"
 										strokeWidth={2}
 										viewBox="0 0 24 24"
+										aria-hidden="true"
 									>
 										<path
 											strokeLinecap="round"
@@ -203,12 +235,12 @@ export default function VideoPlayer({ showYouTube, onPlayClick }: VideoPlayerPro
 											d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
 										/>
 									</svg>
-								</div>
+								</button>
 								<a
-									href="https://imagineteam.com/contact-us/"
+									href={EXTERNAL_LINKS.CONTACT_PAGE}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="mt-4 px-5 py-2 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md whitespace-nowrap"
+									className="mt-4 px-5 py-2 bg-gradient-to-r from-[#0A5A7C] to-[#4B9CD3] text-white font-semibold text-sm uppercase tracking-wide rounded-lg hover:opacity-90 transition-opacity cursor-pointer shadow-md whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-white/50"
 								>
 									Contact Us
 								</a>

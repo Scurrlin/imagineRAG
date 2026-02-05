@@ -2,7 +2,7 @@
  * Upload Documents Script
  *
  * This script uploads your curated case studies and white papers to Qdrant.
- * 
+ *
  * Place your documents in:
  *   - app/scripts/data/case_studies.json (case studies)
  *   - app/scripts/data/white_papers.json (white papers)
@@ -16,17 +16,28 @@ import OpenAI from 'openai';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// Configuration constants (mirrored from app/config.ts for script usage)
 const COLLECTION_NAME = 'imagineSoftware';
+const EMBEDDING_MODEL = 'text-embedding-3-small';
 const VECTOR_SIZE = 512;
 
-// Initialize clients
+// Validate required environment variables
+function getRequiredEnv(name: string): string {
+	const value = process.env[name];
+	if (!value) {
+		throw new Error(`Missing required environment variable: ${name}`);
+	}
+	return value;
+}
+
+// Initialize clients with validated env vars
 const qdrantClient = new QdrantClient({
-	url: process.env.QDRANT_URL!,
-	apiKey: process.env.QDRANT_API_KEY!,
+	url: getRequiredEnv('QDRANT_URL'),
+	apiKey: getRequiredEnv('QDRANT_API_KEY'),
 });
 
 const openaiClient = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY!,
+	apiKey: getRequiredEnv('OPENAI_API_KEY'),
 });
 
 // Type definitions matching your schema
@@ -217,6 +228,7 @@ async function ensureCollectionExists() {
 		);
 
 		if (!exists) {
+			// eslint-disable-next-line no-console
 			console.log(`Creating collection: ${COLLECTION_NAME}`);
 			await qdrantClient.createCollection(COLLECTION_NAME, {
 				vectors: {
@@ -224,11 +236,14 @@ async function ensureCollectionExists() {
 					distance: 'Cosine',
 				},
 			});
+			// eslint-disable-next-line no-console
 			console.log('Collection created successfully');
 		} else {
+			// eslint-disable-next-line no-console
 			console.log(`Collection ${COLLECTION_NAME} already exists`);
 		}
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error('Error ensuring collection exists:', error);
 		throw error;
 	}
@@ -236,14 +251,18 @@ async function ensureCollectionExists() {
 
 async function generateEmbedding(text: string): Promise<number[]> {
 	const response = await openaiClient.embeddings.create({
-		model: 'text-embedding-3-small',
+		model: EMBEDDING_MODEL,
 		dimensions: VECTOR_SIZE,
 		input: text,
 	});
 	return response.data[0].embedding;
 }
 
-async function uploadDocument(document: Document, index: number, total: number) {
+async function uploadDocument(
+	document: Document,
+	index: number,
+	total: number
+) {
 	let label: string;
 	let content: string;
 
@@ -262,6 +281,7 @@ async function uploadDocument(document: Document, index: number, total: number) 
 		content = buildWhitePaperChunkContent(document);
 	}
 
+	// eslint-disable-next-line no-console
 	console.log(`Uploading [${index + 1}/${total}]: ${label}`);
 
 	const embedding = await generateEmbedding(content);
@@ -290,6 +310,7 @@ function loadJsonFile<T>(filePath: string): T[] {
 }
 
 async function main() {
+	// eslint-disable-next-line no-console
 	console.log('Starting document upload...\n');
 
 	// Ensure collection exists
@@ -303,9 +324,13 @@ async function main() {
 	const whitePapers = loadJsonFile<WhitePaper>(whitePapersPath);
 
 	if (caseStudies.length === 0 && whitePapers.length === 0) {
+		// eslint-disable-next-line no-console
 		console.log('\n⚠️  No documents found!');
+		// eslint-disable-next-line no-console
 		console.log('Create your documents at:');
+		// eslint-disable-next-line no-console
 		console.log('  - app/scripts/data/case_studies.json (case studies)');
+		// eslint-disable-next-line no-console
 		console.log('  - app/scripts/data/white_papers.json (white papers)');
 		return;
 	}
@@ -320,8 +345,13 @@ async function main() {
 	// Combine all documents
 	const documents: Document[] = [...caseStudies, ...whitePaperChunks];
 
+	// eslint-disable-next-line no-console
 	console.log(`Found ${caseStudies.length} case studies`);
-	console.log(`Found ${whitePapers.length} white papers → chunked into ${whitePaperChunks.length} sections`);
+	// eslint-disable-next-line no-console
+	console.log(
+		`Found ${whitePapers.length} white papers → chunked into ${whitePaperChunks.length} sections`
+	);
+	// eslint-disable-next-line no-console
 	console.log(`Total: ${documents.length} documents to upload\n`);
 
 	// Upload each document
@@ -331,16 +361,21 @@ async function main() {
 			// Small delay to avoid rate limiting
 			await new Promise((resolve) => setTimeout(resolve, 200));
 		} catch (error) {
+			// eslint-disable-next-line no-console
 			console.error(`Error uploading document ${i + 1}:`, error);
 		}
 	}
 
+	// eslint-disable-next-line no-console
 	console.log('\n✅ Upload complete!');
 
 	// Show collection stats
 	const collectionInfo = await qdrantClient.getCollection(COLLECTION_NAME);
+	// eslint-disable-next-line no-console
 	console.log(`\nCollection stats:`);
+	// eslint-disable-next-line no-console
 	console.log(`  - Points count: ${collectionInfo.points_count}`);
+	// eslint-disable-next-line no-console
 	console.log(`  - Vector size: ${collectionInfo.config.params.vectors}`);
 }
 

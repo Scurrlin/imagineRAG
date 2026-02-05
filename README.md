@@ -2,7 +2,7 @@
 
 ![banner_image](public/imagine-preview.png)
 
-A RAG-powered chat interface designed to simulate an initial constultation with ImagineSoftware. Potential clients can describe their business challenges and receive relevant case studies and white paper references.
+A RAG-powered chat interface designed to simulate an initial consultation with ImagineSoftware. Potential clients can describe their business challenges and get a high-level overview of how ImagineSoftware could help based on relevant case studies and white paper references.
 
 **Live Demo**: [https://imaginerag.onrender.com](https://imaginerag.onrender.com)
 
@@ -10,7 +10,7 @@ A RAG-powered chat interface designed to simulate an initial constultation with 
 
 - **Stateless Chat Interface** - Clean, single-turn Q&A with 400 character limit
 - **Two-Layer Guardrails** - LLM classification + embedding similarity to keep queries on-topic
-- **Cohere Re-ranking** - Retrieves candidates then re-ranks for the top 3 most relevant documents
+- **Cohere Re-ranking** - Retrieves candidates then re-ranks for the top 6 most relevant documents
 - **Streaming Responses** - Real-time response streaming using Vercel AI SDK
 - **Video Preview** - Auto-playing muted preview video with click-to-play YouTube embed
 - **Responsive Design** - Optimized layouts for mobile, tablet, and desktop
@@ -132,9 +132,8 @@ app/
 │   ├── rag.ts                  # Main RAG agent with retrieval tool
 │   └── types.ts                # TypeScript types for documents
 ├── api/
-│   ├── chat/                   # Main chat endpoint
-│   ├── guardrail/              # Query validation endpoint
-│   └── upload-document/        # Document upload API
+│   ├── chat/                   # Main chat endpoint (with rate limiting)
+│   └── guardrail/              # Query validation endpoint (with rate limiting)
 ├── components/
 │   ├── ChatInput.tsx           # Input form with textarea and buttons
 │   ├── ChatMessages.tsx        # Message list and welcome content
@@ -144,12 +143,14 @@ app/
 │   ├── cohere.ts               # Cohere re-ranking client
 │   ├── openai.ts               # OpenAI client configuration
 │   ├── qdrant.ts               # Qdrant client
+│   ├── rate-limit.ts           # Rate limiting middleware
 │   └── utils.ts                # Utility functions
 ├── scripts/
 │   ├── data/
 │   │   ├── case_studies.json   # Case studies
 │   │   └── white_papers.json   # White papers
 │   └── upload-documents.ts     # Upload script
+├── config.ts                   # Centralized configuration
 ├── globals.css                 # Global styles
 ├── layout.tsx                  # Root layout
 └── page.tsx                    # Main chat UI
@@ -158,24 +159,28 @@ app/
 ## API Endpoints
 
 ### POST /api/guardrail
-Validates if a query is on-topic for ImagineSoftware's services.
+Validates if a query is on-topic for ImagineSoftware's services. Includes rate limiting.
 
 ### POST /api/chat
-Main chat endpoint. Streams RAG-powered responses.
-
-### POST /api/upload-document
-Upload individual documents (case studies or white papers).
+Main chat endpoint. Streams RAG-powered responses. Includes rate limiting.
 
 ## Configuration
 
-Key thresholds in `app/api/guardrail/route.ts`:
+All configuration is centralized in `app/config.ts`:
+
+**Guardrail Settings:**
 - `CONFIDENCE_THRESHOLD`: 4 (LLM confidence score minimum)
 - `SIMILARITY_THRESHOLD`: 0.4 (Embedding cosine similarity minimum)
 
-Re-ranking settings in `app/agents/rag.ts`:
+**Re-ranking Settings:**
 - Retrieves top 14 candidates from Qdrant (4 case studies, 10 white paper chunks)
 - Re-ranks to top 6 with Cohere (1 case study, 5 white paper chunks)
 
-Chat input settings in `app/page.tsx`:
+**Rate Limiting:**
+- 20 requests per minute per IP address
+- Returns 429 with `Retry-After` header when exceeded
+- Includes `X-RateLimit-*` headers in all responses
+
+**Chat Input:**
 - Maximum 400 characters per message
 - Character counter appears at 320+ characters

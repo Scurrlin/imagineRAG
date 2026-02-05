@@ -5,132 +5,115 @@ import { streamText, tool, stepCountIs } from 'ai';
 import { qdrantClient } from '../libs/qdrant';
 import { cohereClient } from '../libs/cohere';
 import { z } from 'zod';
-
-const COLLECTION_NAME = 'imagineSoftware';
+import {
+	QDRANT_COLLECTION,
+	EMBEDDING_MODEL,
+	EMBEDDING_DIMENSIONS,
+	RETRIEVAL_CONFIG,
+} from '@/app/config';
 
 const toolInputSchema = z.object({
 	query: z.string().describe('The business problem or query to search for'),
 });
-
-// Retrieval configuration
-const CASE_STUDY_RETRIEVE_LIMIT = 4;
-const CASE_STUDY_RERANK_TOP_N = 1;
-const WHITE_PAPER_RETRIEVE_LIMIT = 10;
-const WHITE_PAPER_RERANK_TOP_N = 5;
 
 const retrieveDocumentsTool = tool({
 	description:
 		'Retrieve relevant case studies and white papers from the ImagineSoftware knowledge base to help answer business problems',
 	inputSchema: toolInputSchema,
 	execute: async ({ query }) => {
-		console.log('🔍 Tool called with query:', query);
-		
 		try {
-			// Generate embedding for the query
-			console.log('📝 Generating embedding...');
+			// Generate embedding for query
 			const embedding = await openaiClient.embeddings.create({
-				model: 'text-embedding-3-small',
-				dimensions: 512,
+				model: EMBEDDING_MODEL,
+				dimensions: EMBEDDING_DIMENSIONS,
 				input: query,
 			});
 
 			const queryVector = embedding.data[0].embedding;
-			console.log('✓ Embedding generated');
 
 			// Search without filters, then separate by type
-			console.log('🔎 Searching Qdrant...');
-			const allResults = await qdrantClient.search(COLLECTION_NAME, {
+			const allResults = await qdrantClient.search(QDRANT_COLLECTION, {
 				vector: queryVector,
-				limit: 20,
+				limit: RETRIEVAL_CONFIG.TOTAL_RETRIEVE_LIMIT,
 				with_payload: true,
 			});
-			console.log('✓ Qdrant search complete, found', allResults.length, 'results');
 
-			// Separate results by document type and limit to max counts
+			// Separate results by doc type and limit to max counts
 			const caseStudyResults = allResults
 				.filter((r) => r.payload?.documentType === 'case_study')
-				.slice(0, CASE_STUDY_RETRIEVE_LIMIT); // Max 4
+				.slice(0, RETRIEVAL_CONFIG.CASE_STUDY_RETRIEVE_LIMIT);
 			const whitePaperResults = allResults
 				.filter((r) => r.payload?.documentType === 'white_paper_chunk')
-				.slice(0, WHITE_PAPER_RETRIEVE_LIMIT); // Max 10
+				.slice(0, RETRIEVAL_CONFIG.WHITE_PAPER_RETRIEVE_LIMIT);
 
-			console.log('📊 Search results:', {
-				caseStudies: caseStudyResults.length,
-				whitePapers: whitePaperResults.length,
-			});
+			const results: Array<{
+				content: string;
+				relevanceScore: number;
+				metadata: Record<string, unknown>;
+			}> = [];
 
-		const results: Array<{
-			content: string;
-			relevanceScore: number;
-			metadata: Record<string, unknown>;
-		}> = [];
-
-		// Re-rank case studies and take top 1
-		if (caseStudyResults.length > 0) {
-			console.log('🔄 Re-ranking case studies...');
-			const rerankedCaseStudies = await cohereClient.rerank({
-				model: 'rerank-english-v3.0',
-				query: query,
-				documents: caseStudyResults.map(
-					(result) => result.payload?.content as string
-				),
-				topN: CASE_STUDY_RERANK_TOP_N,
-				returnDocuments: true,
-			});
-
-			for (const result of rerankedCaseStudies.results) {
-				const originalDoc = caseStudyResults[result.index];
-				results.push({
-					content: result.document?.text || '',
-					relevanceScore: result.relevanceScore,
-					metadata: {
-						documentType: 'case_study',
-						client: originalDoc.payload?.client,
-						title: originalDoc.payload?.title,
-						challenge: originalDoc.payload?.challenge,
-						solution: originalDoc.payload?.solution,
-						result: originalDoc.payload?.result,
-					},
+			// Re-rank case studies and take top N
+			if (caseStudyResults.length > 0) {
+				const rerankedCaseStudies = await cohereClient.rerank({
+					model: 'rerank-english-v3.0',
+					query: query,
+					documents: caseStudyResults.map(
+						(result) => result.payload?.content as string
+					),
+					topN: RETRIEVAL_CONFIG.CASE_STUDY_RERANK_TOP_N,
+					returnDocuments: true,
 				});
+
+				for (const result of rerankedCaseStudies.results) {
+					const originalDoc = caseStudyResults[result.index];
+					results.push({
+						content: result.document?.text || '',
+						relevanceScore: result.relevanceScore,
+						metadata: {
+							documentType: 'case_study',
+							client: originalDoc.payload?.client,
+							title: originalDoc.payload?.title,
+							challenge: originalDoc.payload?.challenge,
+							solution: originalDoc.payload?.solution,
+							result: originalDoc.payload?.result,
+						},
+					});
+				}
 			}
-		}
 
-		// Re-rank white paper chunks and take top 5
-		if (whitePaperResults.length > 0) {
-			console.log('🔄 Re-ranking white papers...');
-			const rerankedWhitePapers = await cohereClient.rerank({
-				model: 'rerank-english-v3.0',
-				query: query,
-				documents: whitePaperResults.map(
-					(result) => result.payload?.content as string
-				),
-				topN: WHITE_PAPER_RERANK_TOP_N,
-				returnDocuments: true,
-			});
-
-			for (const result of rerankedWhitePapers.results) {
-				const originalDoc = whitePaperResults[result.index];
-				results.push({
-					content: result.document?.text || '',
-					relevanceScore: result.relevanceScore,
-					metadata: {
-						documentType: 'white_paper_chunk',
-						parentTitle: originalDoc.payload?.parentTitle,
-						subtitle: originalDoc.payload?.subtitle,
-						theme: originalDoc.payload?.theme,
-						chunkType: originalDoc.payload?.chunkType,
-						sectionTitle: originalDoc.payload?.sectionTitle,
-						sectionType: originalDoc.payload?.sectionType,
-						keyPoints: originalDoc.payload?.keyPoints,
-					},
+			// Re-rank white paper chunks and take top N
+			if (whitePaperResults.length > 0) {
+				const rerankedWhitePapers = await cohereClient.rerank({
+					model: 'rerank-english-v3.0',
+					query: query,
+					documents: whitePaperResults.map(
+						(result) => result.payload?.content as string
+					),
+					topN: RETRIEVAL_CONFIG.WHITE_PAPER_RERANK_TOP_N,
+					returnDocuments: true,
 				});
-			}
-		}
 
-		console.log('✅ Returning', results.length, 'documents to LLM');
-		return results;
-		} catch (error) {
-			console.error('❌ Tool execution error:', error);
+				for (const result of rerankedWhitePapers.results) {
+					const originalDoc = whitePaperResults[result.index];
+					results.push({
+						content: result.document?.text || '',
+						relevanceScore: result.relevanceScore,
+						metadata: {
+							documentType: 'white_paper_chunk',
+							parentTitle: originalDoc.payload?.parentTitle,
+							subtitle: originalDoc.payload?.subtitle,
+							theme: originalDoc.payload?.theme,
+							chunkType: originalDoc.payload?.chunkType,
+							sectionTitle: originalDoc.payload?.sectionTitle,
+							sectionType: originalDoc.payload?.sectionType,
+							keyPoints: originalDoc.payload?.keyPoints,
+						},
+					});
+				}
+			}
+
+			return results;
+		} catch {
 			return [];
 		}
 	},
@@ -179,15 +162,5 @@ When responding to a potential client:
 			},
 		],
 		temperature: 0.7,
-		onFinish: ({ text, finishReason, steps }) => {
-			console.log('📝 Finish reason:', finishReason);
-			console.log('📝 Number of steps:', steps?.length || 0);
-			console.log('📝 Generated response length:', text?.length || 0, 'characters');
-			if (steps?.length) {
-				steps.forEach((step, i) => {
-					console.log(`   Step ${i + 1}: toolCalls=${step.toolCalls?.length || 0}, text=${step.text?.length || 0} chars`);
-				});
-			}
-		},
 	});
 }

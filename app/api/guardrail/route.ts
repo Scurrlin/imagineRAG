@@ -4,9 +4,12 @@ import { zodTextFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { messageSchema } from '@/app/agents/types';
 import { cosineSimilarity } from '@/app/libs/utils';
-
-const CONFIDENCE_THRESHOLD = 4;
-const SIMILARITY_THRESHOLD = 0.4;
+import { rateLimiter, getClientIp, rateLimitHeaders } from '@/app/libs/rate-limit';
+import {
+	GUARDRAIL_CONFIG,
+	EMBEDDING_MODEL,
+	EMBEDDING_DIMENSIONS,
+} from '@/app/config';
 
 const guardrailRequestSchema = z.object({
 	messages: z.array(messageSchema).min(1),
@@ -15,7 +18,9 @@ const guardrailRequestSchema = z.object({
 const guardrailResponseSchema = z.object({
 	isOnTopic: z
 		.boolean()
-		.describe('Whether the query is about a business problem ImagineSoftware could help with'),
+		.describe(
+			'Whether the query is about a business problem ImagineSoftware could help with'
+		),
 	clarification: z
 		.string()
 		.nullable()
@@ -24,7 +29,9 @@ const guardrailResponseSchema = z.object({
 		),
 	refinedQuery: z
 		.string()
-		.describe('The refined query with typos fixed and unnecessary words removed'),
+		.describe(
+			'The refined query with typos fixed and unnecessary words removed'
+		),
 	confidence: z
 		.number()
 		.min(1)
@@ -34,76 +41,18 @@ const guardrailResponseSchema = z.object({
 		),
 });
 
-// Few-shot examples commented out - system prompt + schema should be sufficient
-// Uncomment if you notice quality issues with classification
-/*
-const fewShotExamples = [
-	// High Confidence - RCM business problems
-	{
-		isOnTopic: true,
-		refinedQuery: 'Radiology practice struggling with high denial rates and slow collections',
-		confidence: 9,
-		clarification: null,
-	},
-	{
-		isOnTopic: true,
-		refinedQuery: 'Oncology practice losing money due to drug underpayments from payers',
-		confidence: 9,
-		clarification: null,
-	},
-	{
-		isOnTopic: true,
-		refinedQuery: 'Looking to bring billing in-house from problematic third-party vendor',
-		confidence: 9,
-		clarification: null,
-	},
-	{
-		isOnTopic: true,
-		refinedQuery: 'Need help with billing automation during rapid practice growth',
-		confidence: 8,
-		clarification: null,
-	},
-	{
-		isOnTopic: true,
-		refinedQuery: 'Urgent care center with outsourced billing issues and revenue loss',
-		confidence: 9,
-		clarification: null,
-	},
-
-	// Medium Confidence
-	{
-		isOnTopic: true,
-		refinedQuery: 'Having billing problems at my medical practice',
-		confidence: 6,
-		clarification: null,
-	},
-
-	// Off-topic queries
-	{
-		isOnTopic: false,
-		refinedQuery: 'What is the weather in Tokyo?',
-		confidence: 1,
-		clarification:
-			'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges like billing automation, denial management, and practice growth. What billing or RCM challenge are you facing?',
-	},
-	{
-		isOnTopic: false,
-		refinedQuery: 'Tell me a joke',
-		confidence: 1,
-		clarification:
-			'I specialize in helping medical practices understand how ImagineSoftware can solve their billing and revenue cycle challenges. Do you have an RCM problem I can help with?',
-	},
-	{
-		isOnTopic: false,
-		refinedQuery: 'Write code for a sorting algorithm',
-		confidence: 2,
-		clarification:
-			'I focus on healthcare revenue cycle management questions. If you have questions about medical billing, claims management, or practice financial performance, I am happy to help.',
-	},
-];
-*/
-
 export async function POST(req: NextRequest) {
+	// Rate limiting
+	const clientIp = getClientIp(req);
+	const rateLimit = rateLimiter.check(clientIp);
+
+	if (!rateLimit.success) {
+		return NextResponse.json(
+			{ error: 'Too many requests. Please try again later.' },
+			{ status: 429, headers: rateLimitHeaders(rateLimit) }
+		);
+	}
+
 	try {
 		const body = await req.json();
 		const parsed = guardrailRequestSchema.parse(body);
@@ -179,40 +128,38 @@ Analyze the user's query and determine:
 		const { isOnTopic, refinedQuery, confidence, clarification } =
 			response.output_parsed ?? {};
 
-		console.log('Layer 1 (LLM) Result:', {
-			isOnTopic,
-			confidence,
-			hasClarification: !!clarification,
-		});
-
 		// First rejection point: LLM says off-topic or low confidence
-		if (!isOnTopic || (confidence && confidence < CONFIDENCE_THRESHOLD)) {
-			console.log('Rejected by Layer 1 (LLM classification)');
-
-			return NextResponse.json({
-				accepted: false,
-				query: refinedQuery,
-				confidence,
-				similarityScore: null,
-			clarification:
-				clarification ||
-				'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges. What billing or RCM problem are you facing?',
-				rejectedBy: 'llm_classification',
-			});
+		if (
+			!isOnTopic ||
+			(confidence && confidence < GUARDRAIL_CONFIG.CONFIDENCE_THRESHOLD)
+		) {
+			return NextResponse.json(
+				{
+					accepted: false,
+					query: refinedQuery,
+					confidence,
+					similarityScore: null,
+					clarification:
+						clarification ||
+						'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges. What billing or RCM problem are you facing?',
+					rejectedBy: 'llm_classification',
+				},
+				{ headers: rateLimitHeaders(rateLimit) }
+			);
 		}
 
 		// Layer 2: Embedding Similarity Check
 		const [queryEmbedding, domainEmbedding] = await Promise.all([
 			openaiClient.embeddings.create({
-				model: 'text-embedding-3-small',
-				dimensions: 512,
+				model: EMBEDDING_MODEL,
+				dimensions: EMBEDDING_DIMENSIONS,
 				input: refinedQuery ?? '',
 			}),
-		openaiClient.embeddings.create({
-			model: 'text-embedding-3-small',
-			dimensions: 512,
-			input: `Healthcare revenue cycle management. Medical billing challenges. Claims denials and appeals. Payment posting automation. Patient collections. Accounts receivable optimization. Third-party billing problems. In-house billing transition. Practice management software. Healthcare analytics. Radiology billing. Oncology billing. Anesthesiology billing. Pathology billing. Urgent care billing. Outsourced billing vendor issues. Revenue leakage. Days in AR. Clean claim rate. Case study. Client success story. How did you help. Tell me more about. Implementation results. Customer outcomes. Practice management company. Billing company. Medical group. ImagineSoftware products and tools. ImagineOne platform. ImagineBilling system. ImagineAppliance automation. ImaginePay patient payments. ImagineCo-Pilot AI assistant. ImagineIntelligence analytics. AutoCoder coding automation. Charge Central. Criteria Builder. What is ImagineOne. How does ImagineBilling work. Tell me about the tools.`,
-		}),
+			openaiClient.embeddings.create({
+				model: EMBEDDING_MODEL,
+				dimensions: EMBEDDING_DIMENSIONS,
+				input: GUARDRAIL_CONFIG.DOMAIN_DESCRIPTION,
+			}),
 		]);
 
 		const similarityScore = cosineSimilarity(
@@ -220,38 +167,33 @@ Analyze the user's query and determine:
 			domainEmbedding.data[0].embedding
 		);
 
-		console.log('Layer 2 (Embedding) Result:', {
-			similarityScore: similarityScore.toFixed(4),
-			threshold: SIMILARITY_THRESHOLD,
-			passed: similarityScore >= SIMILARITY_THRESHOLD,
-		});
-
 		// Second rejection point: embedding similarity too low
-		if (similarityScore < SIMILARITY_THRESHOLD) {
-			console.log('Rejected by Layer 2 (embedding similarity)');
-
-			return NextResponse.json({
-				accepted: false,
-				query: refinedQuery,
-				confidence,
-				similarityScore,
-		clarification:
-				'Your query seems outside my expertise. I specialize in helping medical practices understand how ImagineSoftware can address billing, revenue cycle, and practice management challenges.',
-				rejectedBy: 'embedding_similarity',
-			});
+		if (similarityScore < GUARDRAIL_CONFIG.SIMILARITY_THRESHOLD) {
+			return NextResponse.json(
+				{
+					accepted: false,
+					query: refinedQuery,
+					confidence,
+					similarityScore,
+					clarification:
+						'Your query seems outside my expertise. I specialize in helping medical practices understand how ImagineSoftware can address billing, revenue cycle, and practice management challenges.',
+					rejectedBy: 'embedding_similarity',
+				},
+				{ headers: rateLimitHeaders(rateLimit) }
+			);
 		}
 
 		// Query accepted
-		console.log('Query accepted:', { confidence, similarityScore });
-
-		return NextResponse.json({
-			accepted: true,
-			query: refinedQuery,
-			confidence,
-			similarityScore,
-		});
-	} catch (error) {
-		console.error('Error in guardrail:', error);
+		return NextResponse.json(
+			{
+				accepted: true,
+				query: refinedQuery,
+				confidence,
+				similarityScore,
+			},
+			{ headers: rateLimitHeaders(rateLimit) }
+		);
+	} catch {
 		return NextResponse.json(
 			{ error: 'Failed to process query' },
 			{ status: 500 }
