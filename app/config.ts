@@ -20,15 +20,15 @@ function getOptionalEnv(name: string): string | undefined {
 }
 
 export const env = {
-	// Required
-	OPENAI_API_KEY: getRequiredEnv('OPENAI_API_KEY'),
-	QDRANT_URL: getRequiredEnv('QDRANT_URL'),
-	QDRANT_API_KEY: getRequiredEnv('QDRANT_API_KEY'),
-	COHERE_RERANK_API: getRequiredEnv('COHERE_RERANK_API'),
+	// Required (lazy getters)
+	get OPENAI_API_KEY() { return getRequiredEnv('OPENAI_API_KEY'); },
+	get QDRANT_URL() { return getRequiredEnv('QDRANT_URL'); },
+	get QDRANT_API_KEY() { return getRequiredEnv('QDRANT_API_KEY'); },
+	get COHERE_RERANK_API() { return getRequiredEnv('COHERE_RERANK_API'); },
 
 	// Optional
-	HELICONE_API_KEY: getOptionalEnv('HELICONE_API_KEY'),
-} as const;
+	get HELICONE_API_KEY() { return getOptionalEnv('HELICONE_API_KEY'); },
+};
 
 // =============================================================================
 // Qdrant Config
