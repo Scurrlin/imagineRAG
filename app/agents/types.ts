@@ -64,7 +64,7 @@ export interface WhitePaperChunkDocument {
 export type DocumentMetadata = CaseStudyDocument | WhitePaperChunkDocument;
 
 // =============================================================================
-// Retrieved Docment Types (after search and re-ranking)
+// Retrieved Document Types (after search and re-ranking)
 // =============================================================================
 
 export interface RetrievedDocument {
