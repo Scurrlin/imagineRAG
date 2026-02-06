@@ -106,16 +106,18 @@ export default function ChatInput({
 				</div>
 			</form>
 
-			{/* Character counter */}
+			{/* Character limit warning */}
 			{input.length > CHAT_CONFIG.WARNING_THRESHOLD && (
 				<div
-					className={`text-center text-xs mt-1.5 ${
+					className={`text-center text-xs mt-2 font-medium ${
 						input.length >= CHAT_CONFIG.MAX_MESSAGE_LENGTH
 							? 'text-red-400'
-							: 'text-white/40'
+							: 'text-white/50'
 					}`}
 				>
-					{input.length}/{CHAT_CONFIG.MAX_MESSAGE_LENGTH}
+					{input.length >= CHAT_CONFIG.MAX_MESSAGE_LENGTH
+						? `Character limit reached: ${input.length}/${CHAT_CONFIG.MAX_MESSAGE_LENGTH}`
+						: `Maximum ${CHAT_CONFIG.MAX_MESSAGE_LENGTH} characters: ${input.length}/${CHAT_CONFIG.MAX_MESSAGE_LENGTH}`}
 				</div>
 			)}
 		</div>
