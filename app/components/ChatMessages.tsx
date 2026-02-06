@@ -15,12 +15,12 @@ export default function ChatMessages({
 }: ChatMessagesProps) {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	// Auto-scroll to bottom of messages
+	// Scroll to bottom only when a new message is added (not on content updates from streaming)
 	useEffect(() => {
 		if (messages.length > 0) {
 			messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 		}
-	}, [messages]);
+	}, [messages.length]);
 
 	return (
 		<div className="chat-panel-messages overflow-y-auto px-4 sm:px-6 py-4 space-y-4">

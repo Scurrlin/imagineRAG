@@ -74,7 +74,7 @@ export default function ChatInput({
 						onKeyDown={handleKeyDown}
 						placeholder="What's your biggest billing or revenue cycle challenge right now?"
 						maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
-					className={`w-full h-full resize-none outline-none rounded-xl px-4 py-3 text-white text-sm sm:text-base transition-all ${
+					className={`w-full h-full resize-none outline-none rounded-xl px-4 py-3 text-white text-base transition-all ${
 					chatOpen
 						? 'bg-white/10 border border-white/30 placeholder-white/40 focus:border-white/50 focus:bg-white/15'
 						: 'bg-white/10 border border-white placeholder-white/70 focus:border-white focus:bg-white/15'
