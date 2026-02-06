@@ -11,10 +11,10 @@ A RAG-powered chat interface designed to simulate an initial consultation with I
 - **Stateless Chat Interface** - Clean, single-turn Q&A with 400 character limit
 - **Two-Layer Guardrails** - LLM classification + embedding similarity to keep queries on-topic
 - **Cohere Re-ranking** - Retrieves candidates then re-ranks for the top 6 most relevant documents
-- **Streaming Responses** - Real-time response streaming using Vercel AI SDK
-- **Video Preview** - Auto-playing muted preview video with click-to-play YouTube embed
-- **Responsive Design** - Optimized layouts for mobile, tablet, and desktop
-- **Call-to-Action Links** - Direct links to ImagineSoftware demo scheduling and contact pages
+- **Streaming Responses** - Real-time response streaming via fetch with ReadableStream
+- **Hero Video Background** - Responsive auto-playing video backgrounds matching the ImagineSoftware site (mobile, tablet, desktop variants)
+- **Responsive Design** - Optimized layouts for mobile, tablet, and desktop with a 1400px breakpoint
+- **Call-to-Action Links** - Direct links to ImagineSoftware home page and contact pages
 
 ## Tech Stack
 
@@ -136,9 +136,9 @@ app/
 │   └── guardrail/              # Query validation endpoint (with rate limiting)
 ├── components/
 │   ├── ChatInput.tsx           # Input form with textarea and buttons
-│   ├── ChatMessages.tsx        # Message list and welcome content
-│   ├── types.ts                # TS types file
-│   └── VideoPlayer.tsx         # Video preview and YouTube player
+│   ├── ChatMessages.tsx        # Message list with markdown rendering
+│   ├── Hero.tsx                # Hero section with responsive video backgrounds
+│   └── types.ts                # Shared TypeScript types
 ├── libs/
 │   ├── cohere.ts               # Cohere re-ranking client
 │   ├── openai.ts               # OpenAI client configuration

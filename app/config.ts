@@ -90,20 +90,6 @@ export const CHAT_CONFIG = {
 } as const;
 
 // =============================================================================
-// Video Config
-// =============================================================================
-
-export const VIDEO_CONFIG = {
-	// Use NEXT_PUBLIC_ prefix for client-side access
-	YOUTUBE_VIDEO: process.env.NEXT_PUBLIC_YOUTUBE_VIDEO || 'fCiN0crOXtM',
-	PREVIEW_VIDEO:
-		process.env.NEXT_PUBLIC_PREVIEW_VIDEO ||
-		'https://imagineteam.com/wp-content/uploads/2025/04/ef4b-4206-b344-7937abcb4293.mp4',
-	MOBILE_PREVIEW: '/imagine-still.png',
-	REPLAY_LOGO: '/imagine-logo2.webp',
-};
-
-// =============================================================================
 // External Links
 // =============================================================================
 

@@ -17,14 +17,22 @@
 	--gray-700: #495057;
 	--gray-800: #343a40;
 	--gray-900: #212529;
+	--imagine-teal: #0A5A7C;
+	--imagine-blue: #4B9CD3;
 }
 
-html, body {
+html {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+body {
 	color: var(--foreground);
-	background: white;
+	background: black;
 	font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	line-height: 1.6;
-	overscroll-behavior: none;
+	overscroll-behavior-x: none;
+	overflow-x: hidden;
 }
 
 /* Height warning - shows when viewport height < 500px */
@@ -39,34 +47,43 @@ html, body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-	width: 8px;
+	width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-	background: var(--gray-200);
+	background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--gray-400);
-	border-radius: 4px;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--gray-500);
+	background: rgba(255, 255, 255, 0.5);
+}
+
+/* Chat panel scrollbar */
+.chat-panel ::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+.chat-panel ::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.2);
 }
 
 /* Prose styling for markdown */
 .prose {
-	color: var(--gray-800);
+	color: rgba(255, 255, 255, 0.9);
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4 {
-	color: var(--gray-900);
+	color: white;
 	font-weight: 600;
 }
 
 .prose a {
-	color: var(--primary);
+	color: var(--primary-light);
 	text-decoration: none;
 }
 
@@ -76,6 +93,7 @@ html, body {
 
 .prose strong {
 	font-weight: 600;
+	color: white;
 }
 
 .prose ul, .prose ol {
@@ -88,22 +106,167 @@ html, body {
 	margin-bottom: 0.25rem;
 }
 
-/* Fade animations */
+.prose code {
+	color: var(--primary-light);
+	background: rgba(255, 255, 255, 0.1);
+	padding: 0.125rem 0.375rem;
+	border-radius: 0.25rem;
+	font-size: 0.875em;
+}
+
+/* ============================================
+   Layout breakpoint at 1400px
+   (matches the original site's Bootstrap xxl)
+   ============================================ */
+
+.hide-xxl  { display: block; }
+.flex1-xxl { display: none; }
+
+@media (min-width: 1400px) {
+	.hide-xxl  { display: none; }
+	.flex1-xxl { display: flex; flex: 1; }
+}
+
+/* ============================================
+   Hero Video — replicates original site's
+   responsive 3-video setup with matching
+   Bootstrap breakpoints (md: 768px, xxl: 1400px)
+   ============================================ */
+
+.hero-video {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 82%;
+	object-fit: cover;
+	z-index: 0;
+	transition: opacity 0.3s ease-in-out;
+	/* Fade the bottom edge into the black background */
+	-webkit-mask-image: linear-gradient(
+		to bottom,
+		black 0%,
+		black 65%,
+		transparent 100%
+	);
+	mask-image: linear-gradient(
+		to bottom,
+		black 0%,
+		black 65%,
+		transparent 100%
+	);
+}
+
+/* ---- Responsive show / hide ---- */
+.hero-video--desktop { display: none; }
+.hero-video--tablet  { display: none; }
+.hero-video--mobile  { display: block; }
+
+/* Tablet: 768px – 1399px */
+@media (min-width: 768px) {
+	.hero-video--mobile  { display: none; }
+	.hero-video--tablet  { display: block; }
+}
+
+/* Desktop: 1400px+ */
+@media (min-width: 1400px) {
+	.hero-video--tablet  { display: none; }
+	.hero-video--desktop { display: block; }
+}
+
+/* Gradient overlay for text readability.
+   The vignette/edge-fade is handled by the CSS mask
+   on the video itself — this overlay only needs to
+   darken the area behind the text. */
+.hero-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	/* Mobile: top-down gradient */
+	background: linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 0.55) 0%,
+		rgba(0, 0, 0, 0.15) 30%,
+		transparent 55%
+	);
+	pointer-events: none;
+}
+
+/* Below 1400px: text is centered, keep top-down gradient */
+
+/* 1400px+: text is left-aligned, use left-to-right gradient */
+@media (min-width: 1400px) {
+	.hero-overlay {
+		background: linear-gradient(
+			to right,
+			rgba(0, 0, 0, 0.6) 0%,
+			rgba(0, 0, 0, 0.25) 35%,
+			transparent 65%
+		);
+	}
+}
+
+/* Bottom gradient for floating input readability */
+.hero-bottom-gradient {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 220px;
+	z-index: 1;
+	background: linear-gradient(
+		to top,
+		rgba(0, 0, 0, 0.8) 0%,
+		rgba(0, 0, 0, 0.4) 50%,
+		transparent 100%
+	);
+	pointer-events: none;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
 @keyframes fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes fade-out {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+@keyframes slide-up {
 	from {
+		transform: translateY(100%);
 		opacity: 0;
 	}
 	to {
+		transform: translateY(0);
 		opacity: 1;
 	}
 }
 
-@keyframes fade-out {
+@keyframes slide-down {
 	from {
+		transform: translateY(0);
 		opacity: 1;
 	}
 	to {
+		transform: translateY(100%);
 		opacity: 0;
+	}
+}
+
+@keyframes hero-text-in {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 
@@ -113,4 +276,109 @@ html, body {
 
 .animate-fade-out {
 	animation: fade-out 0.5s ease forwards;
+}
+
+.animate-slide-up {
+	animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+	animation: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-text {
+	animation: hero-text-in 0.8s ease forwards;
+}
+
+.animate-hero-text-delay-1 {
+	opacity: 0;
+	animation: hero-text-in 0.8s ease 0.2s forwards;
+}
+
+.animate-hero-text-delay-2 {
+	opacity: 0;
+	animation: hero-text-in 0.8s ease 0.4s forwards;
+}
+
+.animate-hero-text-delay-3 {
+	opacity: 0;
+	animation: hero-text-in 0.8s ease 0.6s forwards;
+}
+
+/* ============================================
+   Glassmorphism
+   ============================================ */
+
+.glass {
+	background: #0d1520;
+	border: 1px solid #ffffff;
+}
+
+
+/* ============================================
+   Chat Panel
+   ============================================ */
+
+.chat-panel {
+	position: fixed;
+	bottom: 12px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	z-index: 40;
+	background: #0d1520;
+	border: 1px solid #ffffff;
+	border-radius: 1rem;
+	width: calc(100% - 32px);
+	max-width: 56rem; /* max-w-4xl */
+	display: flex;
+	flex-direction: column;
+}
+
+.chat-panel-messages {
+	height: 400px;
+}
+
+@media (min-width: 640px) {
+	.chat-panel-messages {
+		height: 450px;
+	}
+}
+
+/* ============================================
+   Below-hero centered content (<1400px)
+   ============================================ */
+
+.below-hero-content {
+	position: relative;
+	z-index: 20;
+	text-align: center;
+	/* Pull up so it sits close to the sphere's fade-out */
+	margin-top: -100px;
+	padding: 0 24px;
+}
+
+/* ============================================
+   Chat Input Section — below the hero,
+   pulled up to overlap the bottom edge
+   ============================================ */
+
+.chat-input-section {
+	position: relative;
+	z-index: 20;
+	padding: 24px 16px 60px;
+	display: flex;
+	justify-content: center;
+}
+
+/* On >=1400px (no below-hero-content visible), pull up into the hero */
+@media (min-width: 1400px) {
+	.chat-input-section {
+		margin-top: -80px;
+	}
+}
+
+.chat-input-container {
+	width: 100%;
+	max-width: 56rem; /* match chat panel width */
 }

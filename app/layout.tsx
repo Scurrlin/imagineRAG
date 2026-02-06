@@ -70,7 +70,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body className='bg-white'>
+			<body className='bg-black'>
 				{/* Height warning - shows when viewport height < 500px */}
 				<div className='height-warning fixed inset-0 z-50 flex-col items-center justify-center bg-white hidden'>
 					<img
@@ -83,7 +83,7 @@ export default function RootLayout({
 					</p>
 				</div>
 				{/* Main content - hidden when height warning is shown */}
-				<main className='main-content pt-16'>{children}</main>
+				<main className='main-content'>{children}</main>
 			</body>
 		</html>
 	);
