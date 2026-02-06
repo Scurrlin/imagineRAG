@@ -32,7 +32,7 @@ export default function ChatMessages({
 					}`}
 				>
 					<div
-						className={`max-w-[85%] rounded-2xl px-5 py-3 break-all ${
+						className={`max-w-[85%] rounded-2xl px-5 py-3 ${
 							message.role === 'user'
 								? 'bg-[#4B9CD3] text-white'
 								: 'bg-white/10 text-white/90'
