@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Message } from './components/types';
 import Hero from './components/Hero';
@@ -15,13 +15,6 @@ export default function Home() {
 
 	// Track current request to handle race conditions
 	const abortControllerRef = useRef<AbortController | null>(null);
-
-	// Auto-open chat panel when first message is sent
-	useEffect(() => {
-		if (messages.length > 0 && !chatOpen) {
-			setChatOpen(true);
-		}
-	}, [messages.length, chatOpen]);
 
 	const handleClear = () => {
 		if (abortControllerRef.current) {
@@ -58,6 +51,7 @@ export default function Home() {
 		};
 
 		setMessages((prev) => [...prev, userMessage]);
+		setChatOpen(true);
 		setIsLoading(true);
 
 		try {

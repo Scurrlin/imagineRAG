@@ -35,6 +35,16 @@ body {
 	overflow-x: hidden;
 }
 
+/* Height warning — shows when viewport height < 500px */
+@media (max-height: 499px) {
+	.height-warning {
+		display: flex !important;
+	}
+	.main-content {
+		display: none !important;
+	}
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
 	width: 6px;
