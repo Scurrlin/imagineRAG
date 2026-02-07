@@ -7,8 +7,7 @@ export default function Hero() {
 	return (
 		<section className="hero-section relative overflow-clip">
 			{/* ============================================
-			    Hero Video Background — 3 responsive cuts
-			    matching the original ImagineSoftware site
+			    Hero Video Background — 3 different cuts
 			    ============================================ */}
 			{/* Desktop (>=1400px) — 1920×1080 */}
 			<video
@@ -53,7 +52,7 @@ export default function Hero() {
 				/>
 			</video>
 
-			{/* Gradient overlays for readability */}
+			{/* Gradient overlays */}
 			<div className="hero-overlay" />
 			<div className="hero-bottom-gradient" />
 
@@ -78,23 +77,23 @@ export default function Hero() {
 						/>
 					</a>
 
-				{/* Center title — hidden on narrow screens */}
-				<h1 className="hidden md:block text-4xl xl:text-5xl font-bold text-white leading-tight animate-hero-text-delay-1">
-					Digital Consultant
-				</h1>
+					{/* Center title — hidden on narrow screens */}
+					<h1 className="hidden md:block text-4xl xl:text-5xl font-bold text-white leading-tight animate-hero-text-delay-1">
+						Digital Consultant
+					</h1>
 
-				{/* CTA button */}
-				<a
-					href={EXTERNAL_LINKS.CONTACT_PAGE}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="px-5 py-2.5 bg-[#4B9CD3] text-white text-sm font-semibold uppercase tracking-wider rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer"
-				>
-					Contact Us
-				</a>
-			</nav>
+					{/* CTA button */}
+					<a
+						href={EXTERNAL_LINKS.CONTACT_PAGE}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="px-5 py-2.5 bg-[#4B9CD3] text-white text-sm font-semibold uppercase tracking-wider rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer"
+					>
+						Contact Us
+					</a>
+				</nav>
 
-			{/* ---- 1400px+: left-aligned together ---- */}
+				{/* ---- 1400px+: left-aligned together ---- */}
 				<div className="flex1-xxl items-center px-16 pb-24">
 					<div className="max-w-lg xl:max-w-xl">
 						<p className="text-[#4B9CD3] text-base font-semibold uppercase tracking-[0.2em] mb-4 animate-hero-text">
