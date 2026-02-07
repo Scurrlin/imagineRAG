@@ -193,10 +193,8 @@ The app is fully responsive across all screen sizes, with tailored layouts at th
 - **Tablet (768px - 1399px)** - Mid-resolution video, horizontal nav with centered "Digital Consultant" title
 - **Desktop (1400px+)** - Full 1920x1080 hero video, left-aligned headline with flex-grow layout
 
-![mobile_design](public/mobile_design.png)
-
 ### Minimum Height Protection
 
-At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behaviour. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
-
 ![height_protection](public/troll_protection.png)
+
+At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behaviour. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
