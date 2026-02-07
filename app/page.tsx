@@ -160,6 +160,9 @@ export default function Home() {
 			    + chat input, all in the black zone
 			    ============================================ */}
 			<div className="below-hero-content hide-xxl">
+				<h2 className="md:hidden text-3xl font-bold text-white mb-6 animate-hero-text">
+					Digital Consultant
+				</h2>
 				<p className="text-[#4B9CD3] text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.2em] mb-4 animate-hero-text">
 					Activate the Power of ImagineOne&reg;
 				</p>
