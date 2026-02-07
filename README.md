@@ -197,4 +197,4 @@ The app is fully responsive across all screen sizes, with tailored layouts at th
 
 ![height_protection](public/troll_protection.png)
 
-At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behaviour. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
+At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behavior. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
