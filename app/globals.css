@@ -109,16 +109,19 @@ body {
 
 /* Hero height — clamped so it never gets too tall on long screens
    or too short on compact ones. Desktop gets more room since
-   the headline text lives inside the hero at that breakpoint. */
+   the headline text lives inside the hero at that breakpoint.
+
+   We use `svh` (small viewport height) so mobile browsers
+   don't resize the hero when the address bar collapses/expands
+   during scroll — `vh` and `dvh` both cause a visible shift. */
 .hero-section {
-	height: clamp(450px, 85vh, 720px);
+	height: clamp(450px, 85svh, 720px);
 }
 
-/* Small phones (~400px wide): lower cap to keep content above browser chrome.
-   iOS Safari's vh includes the URL-bar area, so we need extra room. */
+/* Small phones (~400px wide): lower cap to keep content above browser chrome. */
 @media (max-width: 430px) {
 	.hero-section {
-		height: clamp(400px, 75dvh, 620px);
+		height: clamp(400px, 75svh, 620px);
 	}
 }
 
