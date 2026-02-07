@@ -95,6 +95,5 @@ export const CHAT_CONFIG = {
 
 export const EXTERNAL_LINKS = {
 	HOME_PAGE: 'https://imagineteam.com/',
-	DEMO_PAGE: 'https://imagineteam.com/imagineone/',
 	CONTACT_PAGE: 'https://imagineteam.com/contact-us/',
 } as const;

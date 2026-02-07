@@ -2,23 +2,8 @@
 @import 'tailwindcss';
 
 :root {
-	--background: #f5f7fa;
 	--foreground: #333333;
-	--primary: #4B9CD3;
-	--primary-dark: #3A8BC2;
 	--primary-light: #7BAFD4;
-	--accent: #5BA4D9;
-	--gray-100: #f8f9fa;
-	--gray-200: #e9ecef;
-	--gray-300: #dee2e6;
-	--gray-400: #ced4da;
-	--gray-500: #adb5bd;
-	--gray-600: #6c757d;
-	--gray-700: #495057;
-	--gray-800: #343a40;
-	--gray-900: #212529;
-	--imagine-teal: #0A5A7C;
-	--imagine-blue: #4B9CD3;
 }
 
 html {
@@ -232,11 +217,6 @@ body {
 	to { opacity: 1; }
 }
 
-@keyframes fade-out {
-	from { opacity: 1; }
-	to { opacity: 0; }
-}
-
 @keyframes slide-up {
 	from {
 		transform: translateY(100%);
@@ -245,17 +225,6 @@ body {
 	to {
 		transform: translateY(0);
 		opacity: 1;
-	}
-}
-
-@keyframes slide-down {
-	from {
-		transform: translateY(0);
-		opacity: 1;
-	}
-	to {
-		transform: translateY(100%);
-		opacity: 0;
 	}
 }
 
@@ -274,16 +243,8 @@ body {
 	animation: fade-in 0.5s ease forwards;
 }
 
-.animate-fade-out {
-	animation: fade-out 0.5s ease forwards;
-}
-
 .animate-slide-up {
 	animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-slide-down {
-	animation: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-hero-text {
@@ -293,16 +254,6 @@ body {
 .animate-hero-text-delay-1 {
 	opacity: 0;
 	animation: hero-text-in 0.8s ease 0.2s forwards;
-}
-
-.animate-hero-text-delay-2 {
-	opacity: 0;
-	animation: hero-text-in 0.8s ease 0.4s forwards;
-}
-
-.animate-hero-text-delay-3 {
-	opacity: 0;
-	animation: hero-text-in 0.8s ease 0.6s forwards;
 }
 
 /* ============================================
