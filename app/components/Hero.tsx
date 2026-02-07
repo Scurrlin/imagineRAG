@@ -5,7 +5,7 @@ import { EXTERNAL_LINKS } from '../config';
 
 export default function Hero() {
 	return (
-		<section className="relative h-screen overflow-clip">
+		<section className="hero-section relative overflow-clip">
 			{/* ============================================
 			    Hero Video Background — 3 responsive cuts
 			    matching the original ImagineSoftware site

@@ -107,9 +107,17 @@ body {
 .hide-xxl  { display: block; }
 .flex1-xxl { display: none; }
 
+/* Hero height — clamped so it never gets too tall on long screens
+   or too short on compact ones. Desktop gets more room since
+   the headline text lives inside the hero at that breakpoint. */
+.hero-section {
+	height: clamp(450px, 85vh, 720px);
+}
+
 @media (min-width: 1400px) {
 	.hide-xxl  { display: none; }
 	.flex1-xxl { display: flex; flex: 1; }
+	.hero-section { height: 85vh; }
 }
 
 /* ============================================
