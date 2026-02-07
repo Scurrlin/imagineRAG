@@ -12,7 +12,6 @@ export interface AgentRequest {
 	query: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AgentResponse = StreamTextResult<any, any>;
 
 // =============================================================================
