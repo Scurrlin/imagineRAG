@@ -26,6 +26,7 @@ export default function ChatInput({
 	onToggleChat,
 }: ChatInputProps) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const lastQuestionIndexRef = useRef(-1);
 
 	// Focus textarea when chat opens
 	useEffect(() => {
@@ -49,8 +50,12 @@ export default function ChatInput({
 
 	const handleSampleQuestion = () => {
 		const questions = CHAT_CONFIG.SAMPLE_QUESTIONS;
-		const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-		onInputChange(randomQuestion);
+		let index;
+		do {
+			index = Math.floor(Math.random() * questions.length);
+		} while (index === lastQuestionIndexRef.current && questions.length > 1);
+		lastQuestionIndexRef.current = index;
+		onInputChange(questions[index]);
 	};
 
 	return (
