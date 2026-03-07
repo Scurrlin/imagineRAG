@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import { Send, Trash2, MessageSquare, Sparkles } from 'lucide-react';
+import { Send, Trash2, MessageSquare, CircleHelp } from 'lucide-react';
 import { CHAT_CONFIG } from '@/app/config';
 
 interface ChatInputProps {
@@ -57,21 +57,21 @@ export default function ChatInput({
 		<div className={chatOpen ? 'px-4 sm:px-6 pb-4 pt-2' : 'glass rounded-2xl p-4 shadow-2xl'}>
 			{/* Action buttons row - only when chat is closed */}
 			{!chatOpen && (
-				<div className="mb-3 flex items-center gap-2 flex-wrap">
+				<div className="mb-3 flex gap-2">
 					<button
 						type="button"
 						onClick={handleSampleQuestion}
 						disabled={isLoading}
-						className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-lg hover:bg-white/15 hover:text-white transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
-						<Sparkles className="w-4 h-4" />
+						<CircleHelp className="w-4 h-4" />
 						Sample Question
 					</button>
 					{hasMessages && (
 						<button
 							type="button"
 							onClick={onToggleChat}
-							className="flex items-center gap-2 px-4 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer"
+							className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-lg hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
 						>
 							<MessageSquare className="w-4 h-4" />
 							View Conversation
