@@ -87,6 +87,13 @@ export const RATE_LIMIT_CONFIG = {
 export const CHAT_CONFIG = {
 	MAX_MESSAGE_LENGTH: 400,
 	WARNING_THRESHOLD: 320,
+	SAMPLE_QUESTIONS: [
+		'How can ImagineSoftware help reduce our claim denial rate?',
+		'What makes ImagineOne different from other billing platforms?',
+		'How does your AI-powered coding automation work?',
+		'Can you walk me through a typical revenue cycle optimization?',
+		'What results have other practices seen after switching to ImagineSoftware?',
+	],
 } as const;
 
 // =============================================================================

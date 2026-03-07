@@ -301,12 +301,15 @@ body {
 	border-radius: 1rem;
 	width: calc(100% - 32px);
 	max-width: 56rem; /* max-w-4xl */
+	max-height: calc(100dvh - 24px);
 	display: flex;
 	flex-direction: column;
 }
 
 .chat-panel-messages {
 	height: 400px;
+	flex: 1 1 auto;
+	min-height: 0;
 }
 
 @media (min-width: 640px) {

@@ -1,13 +1,14 @@
 import { z } from 'zod';
 import { ragAgent } from '@/app/agents/rag';
 import { rateLimiter, getClientIp, rateLimitHeaders } from '@/app/libs/rate-limit';
+import { CHAT_CONFIG } from '@/app/config';
 
 const chatSchema = z.object({
 	messages: z
 		.array(
 			z.object({
 				role: z.enum(['user', 'assistant', 'system']),
-				content: z.string(),
+				content: z.string().max(CHAT_CONFIG.MAX_MESSAGE_LENGTH),
 			})
 		)
 		.min(1),

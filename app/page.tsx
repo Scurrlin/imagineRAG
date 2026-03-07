@@ -67,6 +67,17 @@ export default function Home() {
 
 			if (abortController.signal.aborted) return;
 
+			if (!guardrailResponse.ok) {
+				const errorMsg = guardrailResponse.status === 429
+					? 'You\'re sending messages too quickly. Please wait a moment and try again.'
+					: 'Sorry, I encountered an error. Please try again.';
+				setMessages((prev) => [
+					...prev,
+					{ id: crypto.randomUUID(), role: 'assistant', content: errorMsg },
+				]);
+				return;
+			}
+
 			const guardrailResult = await guardrailResponse.json();
 
 			if (!guardrailResult.accepted) {
@@ -75,7 +86,8 @@ export default function Home() {
 					{
 						id: crypto.randomUUID(),
 						role: 'assistant',
-						content: guardrailResult.clarification,
+						content: guardrailResult.clarification ||
+							'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges. What billing or RCM problem are you facing?',
 					},
 				]);
 				return;
@@ -94,7 +106,10 @@ export default function Home() {
 			if (abortController.signal.aborted) return;
 
 			if (!response.ok) {
-				throw new Error('Chat API error');
+				const errorMsg = response.status === 429
+					? 'You\'re sending messages too quickly. Please wait a moment and try again.'
+					: 'Sorry, I encountered an error. Please try again.';
+				throw new Error(errorMsg);
 			}
 
 			const assistantMessageId = crypto.randomUUID();
@@ -139,7 +154,9 @@ export default function Home() {
 				{
 					id: crypto.randomUUID(),
 					role: 'assistant',
-					content: 'Sorry, I encountered an error. Please try again.',
+					content: error instanceof Error && error.message
+						? error.message
+						: 'Sorry, I encountered an error. Please try again.',
 				},
 			]);
 		} finally {

@@ -9,10 +9,15 @@ import {
 	GUARDRAIL_CONFIG,
 	EMBEDDING_MODEL,
 	EMBEDDING_DIMENSIONS,
+	CHAT_CONFIG,
 } from '@/app/config';
 
 const guardrailRequestSchema = z.object({
-	messages: z.array(messageSchema).min(1),
+	messages: z.array(
+		messageSchema.extend({
+			content: z.string().max(CHAT_CONFIG.MAX_MESSAGE_LENGTH),
+		})
+	).min(1),
 });
 
 const guardrailResponseSchema = z.object({
