@@ -65,7 +65,7 @@ export default function ChatInput({
 						className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<CircleHelp className="w-4 h-4" />
-						Sample Question
+						Try Example
 					</button>
 					{hasMessages && (
 						<button
@@ -74,7 +74,7 @@ export default function ChatInput({
 							className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-lg hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
 						>
 							<MessageSquare className="w-4 h-4" />
-							View Conversation
+							View Chat
 						</button>
 					)}
 				</div>
