@@ -65,7 +65,7 @@ export default function ChatInput({
 						className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-4 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<CircleHelp className="w-4 h-4" />
-						Try Example
+						Try An Example
 					</button>
 					{hasMessages && (
 						<button
