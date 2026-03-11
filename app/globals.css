@@ -99,43 +99,9 @@ body {
 	font-size: 0.875em;
 }
 
-/* ============================================
-   Layout breakpoint at 1400px
-   (matches the original site's Bootstrap xxl)
-   ============================================ */
-
-.hide-xxl  { display: block; }
-.flex1-xxl { display: none; }
-
-/* Hero height — clamped so it never gets too tall on long screens
-   or too short on compact ones. Desktop gets more room since
-   the headline text lives inside the hero at that breakpoint.
-
-   We use `svh` (small viewport height) so mobile browsers
-   don't resize the hero when the address bar collapses/expands
-   during scroll — `vh` and `dvh` both cause a visible shift. */
 .hero-section {
-	height: clamp(450px, 85svh, 720px);
+	height: 100svh;
 }
-
-/* Small phones (~400px wide): lower cap to keep content above browser chrome. */
-@media (max-width: 430px) {
-	.hero-section {
-		height: clamp(400px, 75svh, 620px);
-	}
-}
-
-@media (min-width: 1400px) {
-	.hide-xxl  { display: none; }
-	.flex1-xxl { display: flex; flex: 1; }
-	.hero-section { height: 85vh; }
-}
-
-/* ============================================
-   Hero Video — replicates original site's
-   responsive 3-video setup with matching
-   Bootstrap breakpoints (md: 768px, xxl: 1400px)
-   ============================================ */
 
 .hero-video {
 	position: absolute;
@@ -145,8 +111,6 @@ body {
 	height: 82%;
 	object-fit: cover;
 	z-index: 0;
-	transition: opacity 0.3s ease-in-out;
-	/* Fade the bottom edge into the black background */
 	-webkit-mask-image: linear-gradient(
 		to bottom,
 		black 0%,
@@ -161,32 +125,10 @@ body {
 	);
 }
 
-/* ---- Responsive show / hide ---- */
-.hero-video--desktop { display: none; }
-.hero-video--tablet  { display: none; }
-.hero-video--mobile  { display: block; }
-
-/* Tablet: 768px – 1399px */
-@media (min-width: 768px) {
-	.hero-video--mobile  { display: none; }
-	.hero-video--tablet  { display: block; }
-}
-
-/* Desktop: 1400px+ */
-@media (min-width: 1400px) {
-	.hero-video--tablet  { display: none; }
-	.hero-video--desktop { display: block; }
-}
-
-/* Gradient overlay for text readability.
-   The vignette/edge-fade is handled by the CSS mask
-   on the video itself — this overlay only needs to
-   darken the area behind the text. */
 .hero-overlay {
 	position: absolute;
 	inset: 0;
 	z-index: 1;
-	/* Mobile: top-down gradient */
 	background: linear-gradient(
 		to bottom,
 		rgba(0, 0, 0, 0.55) 0%,
@@ -194,20 +136,6 @@ body {
 		transparent 55%
 	);
 	pointer-events: none;
-}
-
-/* Below 1400px: text is centered, keep top-down gradient */
-
-/* 1400px+: text is left-aligned, use left-to-right gradient */
-@media (min-width: 1400px) {
-	.hero-overlay {
-		background: linear-gradient(
-			to right,
-			rgba(0, 0, 0, 0.6) 0%,
-			rgba(0, 0, 0, 0.25) 35%,
-			transparent 65%
-		);
-	}
 }
 
 /* Bottom gradient for floating input readability */
@@ -267,12 +195,47 @@ body {
 }
 
 .animate-hero-text {
+	opacity: 0;
 	animation: hero-text-in 0.8s ease forwards;
 }
 
 .animate-hero-text-delay-1 {
 	opacity: 0;
 	animation: hero-text-in 0.8s ease 0.2s forwards;
+}
+
+.animate-hero-text-delay-2 {
+	opacity: 0;
+	animation: hero-text-in 0.8s ease 0.4s forwards;
+}
+
+.animate-hero-text-delay-3 {
+	opacity: 0;
+	animation: hero-text-in 0.8s ease 0.6s forwards;
+}
+
+/*
+   Visibility-based responsive toggle for "Digital Consultant".
+   Uses visibility instead of display so animations run once on
+   page load and don't re-fire when crossing the breakpoint.
+*/
+.hero-title-nav {
+	visibility: hidden;
+	pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+	.hero-title-nav {
+		visibility: visible;
+		pointer-events: auto;
+	}
+
+	.hero-title-mobile {
+		visibility: hidden;
+		height: 0;
+		margin-bottom: 0;
+		overflow: hidden;
+	}
 }
 
 /* ============================================
@@ -318,40 +281,3 @@ body {
 	}
 }
 
-/* ============================================
-   Below-hero centered content (<1400px)
-   ============================================ */
-
-.below-hero-content {
-	position: relative;
-	z-index: 20;
-	text-align: center;
-	/* Pull up so it sits close to the sphere's fade-out */
-	margin-top: -100px;
-	padding: 0 24px;
-}
-
-/* ============================================
-   Chat Input Section — below the hero,
-   pulled up to overlap the bottom edge
-   ============================================ */
-
-.chat-input-section {
-	position: relative;
-	z-index: 20;
-	padding: 24px 16px 60px;
-	display: flex;
-	justify-content: center;
-}
-
-/* On >=1400px (no below-hero-content visible), pull up into the hero */
-@media (min-width: 1400px) {
-	.chat-input-section {
-		margin-top: -80px;
-	}
-}
-
-.chat-input-container {
-	width: 100%;
-	max-width: 56rem; /* match chat panel width */
-}

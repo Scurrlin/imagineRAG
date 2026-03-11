@@ -169,45 +169,31 @@ export default function Home() {
 
 	return (
 		<div className="relative min-h-screen">
-			{/* Hero section — full viewport height */}
-			<Hero />
-
-			{/* ============================================
-			    Below-hero content (<1400px): centered text
-			    + chat input, all in the black zone
-			    ============================================ */}
-			<div className="below-hero-content hide-xxl">
-				<h2 className="md:hidden text-3xl font-bold text-white mb-6 animate-hero-text">
-					Digital Consultant
-				</h2>
-				<p className="text-[#4B9CD3] text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.2em] mb-4 animate-hero-text">
-					Activate the Power of ImagineOne&reg;
-				</p>
-				<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight animate-hero-text-delay-1">
-					Take a Quantum Leap in
-					<br className="hidden sm:inline" /> Healthcare Systems Technology
-				</h1>
-			</div>
-
-			{/* ============================================
-			    Chat Input Area — sits in the black zone
-			    ============================================ */}
-			{!chatOpen && (
-				<div className="chat-input-section animate-fade-in">
-					<div className="chat-input-container">
-						<ChatInput
-							input={input}
-							isLoading={isLoading}
-							hasMessages={messages.length > 0}
-							chatOpen={false}
-							onInputChange={setInput}
-							onSubmit={handleSubmit}
-							onClear={handleClear}
-							onToggleChat={handleToggleChat}
-						/>
-					</div>
+			<Hero>
+				<div className="text-center px-6 pb-6">
+					<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight animate-hero-text-delay-2">
+						Take a Quantum Leap in
+						<br className="hidden sm:inline" /> Healthcare Systems Technology
+					</h1>
 				</div>
-			)}
+
+				{!chatOpen && (
+					<div className="px-4 pb-6 flex justify-center animate-hero-text-delay-3">
+						<div className="w-full max-w-4xl">
+							<ChatInput
+								input={input}
+								isLoading={isLoading}
+								hasMessages={messages.length > 0}
+								chatOpen={false}
+								onInputChange={setInput}
+								onSubmit={handleSubmit}
+								onClear={handleClear}
+								onToggleChat={handleToggleChat}
+							/>
+						</div>
+					</div>
+				)}
+			</Hero>
 
 			{/* ============================================
 			    Chat Panel (fixed overlay — slides up when open)
