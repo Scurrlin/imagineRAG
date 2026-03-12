@@ -13,7 +13,6 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [chatOpen, setChatOpen] = useState(false);
 
-	// Track current request to handle race conditions
 	const abortControllerRef = useRef<AbortController | null>(null);
 
 	const handleClear = () => {
@@ -170,15 +169,14 @@ export default function Home() {
 	return (
 		<div className="relative min-h-screen">
 			<Hero>
-				<div className="text-center px-6 pb-6">
-					<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight animate-hero-text-delay-2">
+				<div className="hidden sm:block text-center px-6 pb-6">
+					<h1 className="sm:text-3xl md:text-4xl font-bold text-white leading-tight animate-hero-text-delay-2">
 						Take a Quantum Leap in
-						<br className="hidden sm:inline" /> Healthcare Systems Technology
+						<br /> Healthcare Systems Technology
 					</h1>
 				</div>
 
-				{!chatOpen && (
-					<div className="px-4 pb-6 flex justify-center animate-hero-text-delay-3">
+				<div className={`px-4 pb-6 flex justify-center animate-hero-text-delay-3 ${chatOpen ? 'invisible pointer-events-none' : ''}`}>
 						<div className="w-full max-w-4xl">
 							<ChatInput
 								input={input}
@@ -192,7 +190,6 @@ export default function Home() {
 							/>
 						</div>
 					</div>
-				)}
 			</Hero>
 
 			{/* ============================================
