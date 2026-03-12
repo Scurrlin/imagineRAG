@@ -26,7 +26,8 @@ body {
 		display: flex !important;
 	}
 	.main-content {
-		display: none !important;
+		visibility: hidden !important;
+		pointer-events: none !important;
 	}
 }
 
@@ -101,6 +102,23 @@ body {
 
 .hero-section {
 	height: 100svh;
+}
+
+.hero-decorative-text {
+	visibility: hidden;
+	pointer-events: none;
+	height: 0;
+	overflow: hidden;
+}
+
+@media (min-width: 640px) and (min-height: 780px) {
+	.hero-decorative-text {
+		visibility: visible;
+		pointer-events: auto;
+		height: auto;
+		overflow: visible;
+		padding-bottom: 1.5rem;
+	}
 }
 
 .hero-video {

@@ -58,7 +58,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 					<h2 className="hero-title-mobile text-4xl font-bold text-white mb-3 animate-hero-text">
 						Digital Consultant
 					</h2>
-					<p className="text-[#4B9CD3] text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.2em] animate-hero-text-delay-1">
+					<p className="text-[#5BB8E8] text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.2em] animate-hero-text-delay-1">
 						Activate the Power of ImagineOne&reg;
 					</p>
 				</div>

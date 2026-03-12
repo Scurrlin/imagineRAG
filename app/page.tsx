@@ -169,7 +169,7 @@ export default function Home() {
 	return (
 		<div className="relative min-h-screen">
 			<Hero>
-				<div className="hidden sm:block text-center px-6 pb-6">
+				<div className="hero-decorative-text text-center px-6">
 					<h1 className="sm:text-3xl md:text-4xl font-bold text-white leading-tight animate-hero-text-delay-2">
 						Take a Quantum Leap in
 						<br /> Healthcare Systems Technology
