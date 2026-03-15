@@ -1,5 +1,12 @@
 import type { Metadata } from 'next';
+import { Open_Sans } from 'next/font/google';
 import './globals.css';
+
+const openSans = Open_Sans({
+	subsets: ['latin'],
+	weight: ['300', '400', '500', '600', '700'],
+	display: 'swap',
+});
 
 export const metadata: Metadata = {
 	title: 'ImagineSoftware Digital Consultant',
@@ -70,7 +77,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body className='bg-black'>
+			<head>
+				<link rel='preconnect' href='https://imagineteam.com' />
+				<link rel='dns-prefetch' href='https://imagineteam.com' />
+			</head>
+			<body className={`${openSans.className} bg-black`}>
 				{/* Height warning — shows when viewport height < 500px */}
 				<div className='height-warning fixed inset-0 z-50 flex-col items-center justify-center bg-black hidden'>
 					<img
