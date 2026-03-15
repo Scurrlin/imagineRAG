@@ -198,3 +198,24 @@ The app is fully responsive across all screen sizes, with tailored layouts at th
 ![height_protection](public/troll_protection.png)
 
 At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behavior. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
+
+## Cursor Rules for Learning RAG
+
+For those learning RAG for the first time, consider adding a general rules `.mdc` file in `.cursorrules/` like the one below. This gives your AI assistant project-specific context so it can guide you more effectively as you build:
+
+```
+When creating a new API route always use typedRoute
+[typedRoute.ts](mdc:app/api/typedRoute.ts)
+To call this route use fetchApiRoute [client.ts](mdc:app/libs/api/client.ts)
+
+Project structure:
+app/components - shared components that are shared between pages
+app/libs - 3rd party library
+app/scripts - one off scripts to run outside the app
+app/services - services we can call from API routes
+
+This project is to teach early career devs about RAG so leave comments on certain
+features like using Pinecone or AI specific stuff so they can learn.
+```
+
+This helps the AI understand your project layout, enforce patterns like typed routes, and reminds it to leave more detailed comments on RAG-specific code.
