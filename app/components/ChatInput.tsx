@@ -113,7 +113,7 @@ export default function ChatInput({
 					<button
 						type="submit"
 						disabled={isLoading || !input.trim()}
-						className="flex-1 flex items-center justify-center gap-2 px-5 py-2 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<Send className="w-4 h-4" />
 						{isLoading ? 'Sending...' : 'Send'}
@@ -122,7 +122,7 @@ export default function ChatInput({
 						type="button"
 						onClick={onClear}
 						disabled={isLoading || !hasMessages}
-						className="flex-1 flex items-center justify-center gap-2 px-5 py-2 bg-white/10 text-white/70 rounded-xl font-medium hover:bg-white/15 hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-white/10 text-white/70 rounded-xl font-medium hover:bg-white/15 hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<Trash2 className="w-4 h-4" />
 						Clear
