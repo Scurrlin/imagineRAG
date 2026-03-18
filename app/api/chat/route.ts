@@ -38,16 +38,12 @@ export async function POST(req: Request) {
 		// Execute the RAG agent and get streamed response
 		const result = await ragAgent({ query });
 
-		// Add rate limit headers to successful response
-		const response = result.toTextStreamResponse();
-		const headers = new Headers(response.headers);
-		Object.entries(rateLimitHeaders(rateLimit)).forEach(([key, value]) => {
-			headers.set(key, value);
-		});
-
-		return new Response(response.body, {
-			status: response.status,
-			headers,
+		return result.toTextStreamResponse({
+			headers: {
+				'X-Content-Type-Options': 'nosniff',
+				'Cache-Control': 'no-cache, no-transform',
+				...rateLimitHeaders(rateLimit),
+			},
 		});
 	} catch {
 		return new Response('Internal server error', { status: 500 });

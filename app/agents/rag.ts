@@ -1,7 +1,7 @@
 import { AgentRequest, AgentResponse } from './types';
 import { openaiClient } from '@/app/libs/openai';
 import { openai } from '@ai-sdk/openai';
-import { streamText, tool, stepCountIs } from 'ai';
+import { streamText, tool, stepCountIs, smoothStream } from 'ai';
 import { qdrantClient } from '../libs/qdrant';
 import { cohereClient } from '../libs/cohere';
 import { z } from 'zod';
@@ -163,5 +163,6 @@ When responding to a potential client:
 			},
 		],
 		temperature: 0.7,
+		experimental_transform: smoothStream(),
 	});
 }

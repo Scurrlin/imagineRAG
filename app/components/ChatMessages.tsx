@@ -44,7 +44,7 @@ export default function ChatMessages({
 				</div>
 			))}
 
-			{isLoading && (
+			{isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
 				<div className="flex justify-start">
 					<div className="bg-white/10 rounded-2xl px-5 py-3">
 						<div className="flex items-center space-x-2">
