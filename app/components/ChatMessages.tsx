@@ -17,15 +17,26 @@ function splitSources(content: string): { body: string; sources: string | null }
 }
 
 function SourcesBlock({ markdown }: { markdown: string }) {
+	const items = markdown
+		.split(/\n- /)
+		.map((s) => s.replace(/^- /, '').trim())
+		.filter(Boolean);
+
 	return (
 		<div className="mt-3 pt-3 border-t border-white/10">
 			<div className="flex items-center gap-1.5 mb-1.5 text-white/50 text-xs font-medium uppercase tracking-wide">
 				<BookOpen className="w-3.5 h-3.5" />
 				Sources
 			</div>
-			<div className="text-sm text-white/60 prose prose-sm max-w-none">
-				<ReactMarkdown>{markdown}</ReactMarkdown>
-			</div>
+			<ol className="text-sm text-white/60 list-decimal list-inside space-y-1">
+				{items.map((item, i) => (
+					<li key={i}>
+						<ReactMarkdown components={{ p: ({ children }) => <span>{children}</span> }}>
+							{item}
+						</ReactMarkdown>
+					</li>
+				))}
+			</ol>
 		</div>
 	);
 }
