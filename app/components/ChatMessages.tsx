@@ -5,43 +5,47 @@ import ReactMarkdown from 'react-markdown';
 import { ChevronDown } from 'lucide-react';
 import { Message } from './types';
 
+const CHARS_PER_FRAME = 3;
+
 function useStreamingText(content: string, isStreaming: boolean): string {
-	const [displayedContent, setDisplayedContent] = useState(content);
-	const targetRef = useRef(content);
-	const displayedLengthRef = useRef(content.length);
+	const contentRef = useRef(content);
+	const displayedLenRef = useRef(isStreaming ? 0 : content.length);
+	const [displayedLength, setDisplayedLength] = useState(
+		isStreaming ? 0 : content.length
+	);
 	const rafRef = useRef<number | null>(null);
+	const isStreamingRef = useRef(isStreaming);
 
-	targetRef.current = content;
-
-	useEffect(() => {
-		if (!isStreaming) {
-			displayedLengthRef.current = content.length;
-			setDisplayedContent(content);
-		}
-	}, [isStreaming, content]);
+	contentRef.current = content;
+	isStreamingRef.current = isStreaming;
 
 	useEffect(() => {
-		if (!isStreaming) {
-			if (rafRef.current !== null) {
-				cancelAnimationFrame(rafRef.current);
-				rafRef.current = null;
-			}
+		if (displayedLenRef.current >= content.length && !isStreaming) {
 			return;
 		}
 
 		const animate = () => {
-			const target = targetRef.current;
-			const currentLen = displayedLengthRef.current;
-			const gap = target.length - currentLen;
+			const target = contentRef.current;
+			const currentLen = displayedLenRef.current;
 
-			if (gap > 0) {
-				const charsToAdd = gap > 80 ? Math.ceil(gap * 0.1) : 3;
-				const nextLen = Math.min(currentLen + charsToAdd, target.length);
-				displayedLengthRef.current = nextLen;
-				setDisplayedContent(target.slice(0, nextLen));
+			if (currentLen < target.length) {
+				const nextLen = Math.min(
+					currentLen + CHARS_PER_FRAME,
+					target.length
+				);
+				displayedLenRef.current = nextLen;
+				setDisplayedLength(nextLen);
 			}
 
-			rafRef.current = requestAnimationFrame(animate);
+			const stillStreaming = isStreamingRef.current;
+			const caughtUp =
+				displayedLenRef.current >= contentRef.current.length;
+
+			if (stillStreaming || !caughtUp) {
+				rafRef.current = requestAnimationFrame(animate);
+			} else {
+				rafRef.current = null;
+			}
 		};
 
 		rafRef.current = requestAnimationFrame(animate);
@@ -52,9 +56,9 @@ function useStreamingText(content: string, isStreaming: boolean): string {
 				rafRef.current = null;
 			}
 		};
-	}, [isStreaming]);
+	}, [isStreaming, content]);
 
-	return displayedContent;
+	return content.slice(0, displayedLength);
 }
 
 function StreamingMessage({
