@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Message } from './components/types';
 import Hero from './components/Hero';
@@ -12,6 +12,7 @@ export default function Home() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [chatOpen, setChatOpen] = useState(false);
+	const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
 
 	const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -22,12 +23,18 @@ export default function Home() {
 		}
 		setMessages([]);
 		setIsLoading(false);
+		setTypingMessageId(null);
 		setChatOpen(false);
 	};
 
 	const handleToggleChat = () => {
 		setChatOpen((prev) => !prev);
 	};
+
+	const handleTypewriterComplete = useCallback(() => {
+		setTypingMessageId(null);
+		setIsLoading(false);
+	}, []);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -52,6 +59,8 @@ export default function Home() {
 		setMessages((prev) => [...prev, userMessage]);
 		setChatOpen(true);
 		setIsLoading(true);
+
+		let startedTypewriter = false;
 
 		try {
 			// Step 1: Check guardrail
@@ -111,12 +120,6 @@ export default function Home() {
 				throw new Error(errorMsg);
 			}
 
-			const assistantMessageId = crypto.randomUUID();
-			setMessages((prev) => [
-				...prev,
-				{ id: assistantMessageId, role: 'assistant', content: '' },
-			]);
-
 			const reader = response.body?.getReader();
 			const decoder = new TextDecoder();
 			let assistantResponse = '';
@@ -133,16 +136,16 @@ export default function Home() {
 
 					const chunk = decoder.decode(value, { stream: true });
 					assistantResponse += chunk;
-
-					setMessages((prev) =>
-						prev.map((msg) =>
-							msg.id === assistantMessageId
-								? { ...msg, content: assistantResponse }
-								: msg
-						)
-					);
 				}
 			}
+
+			const assistantMessageId = crypto.randomUUID();
+			setMessages((prev) => [
+				...prev,
+				{ id: assistantMessageId, role: 'assistant', content: assistantResponse },
+			]);
+			setTypingMessageId(assistantMessageId);
+			startedTypewriter = true;
 		} catch (error) {
 			if (error instanceof Error && error.name === 'AbortError') {
 				return;
@@ -160,7 +163,9 @@ export default function Home() {
 			]);
 		} finally {
 			if (abortControllerRef.current === abortController) {
-				setIsLoading(false);
+				if (!startedTypewriter) {
+					setIsLoading(false);
+				}
 				abortControllerRef.current = null;
 			}
 		}
@@ -215,6 +220,8 @@ export default function Home() {
 					<ChatMessages
 						messages={messages}
 						isLoading={isLoading}
+						typingMessageId={typingMessageId}
+						onTypewriterComplete={handleTypewriterComplete}
 					/>
 
 					{/* Input inside panel */}
