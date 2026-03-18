@@ -134,7 +134,7 @@ export default function ChatMessages({
 					: 'opacity-100 translate-y-0'
 			}`}
 		>
-			↓ Latest
+			Latest
 			<ArrowDown className="w-3 h-3" />
 		</button>
 		</div>
