@@ -297,3 +297,9 @@ body {
 	}
 }
 
+@media (max-width: 480px) {
+	.chat-textarea {
+		height: calc(2lh + 1.5rem);
+	}
+}
+
