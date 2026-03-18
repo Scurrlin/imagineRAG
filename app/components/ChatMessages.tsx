@@ -2,10 +2,33 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, BookOpen } from 'lucide-react';
 import { Message } from './types';
 
 const TYPEWRITER_SPEED_MS = 30;
+const SOURCES_DELIMITER = /\n---\n\*\*Sources:\*\*/;
+
+function splitSources(content: string): { body: string; sources: string | null } {
+	const match = content.match(SOURCES_DELIMITER);
+	if (!match || match.index === undefined) return { body: content, sources: null };
+	const body = content.slice(0, match.index).trimEnd();
+	const sourcesRaw = content.slice(match.index + match[0].length).trim();
+	return { body, sources: sourcesRaw };
+}
+
+function SourcesBlock({ markdown }: { markdown: string }) {
+	return (
+		<div className="mt-3 pt-3 border-t border-white/10">
+			<div className="flex items-center gap-1.5 mb-1.5 text-white/50 text-xs font-medium uppercase tracking-wide">
+				<BookOpen className="w-3.5 h-3.5" />
+				Sources
+			</div>
+			<div className="text-sm text-white/60 prose prose-sm max-w-none">
+				<ReactMarkdown>{markdown}</ReactMarkdown>
+			</div>
+		</div>
+	);
+}
 
 function TypewriterText({ text, onComplete, onWordReveal }: { text: string; onComplete: () => void; onWordReveal: () => void }) {
 	const [wordCount, setWordCount] = useState(0);
@@ -83,24 +106,32 @@ export default function ChatMessages({
 								: 'bg-white/10 text-white/90'
 						}`}
 					>
-						{message.role === 'assistant' ? (
+					{message.role === 'assistant' ? (() => {
+						const { body, sources } = splitSources(message.content);
+						return (
+						<>
 							<div className="prose prose-sm max-w-none">
 								{message.id === typingMessageId ? (
 								<TypewriterText
-									text={message.content}
+									text={body}
 									onComplete={onTypewriterComplete}
 									onWordReveal={scrollToBottom}
 								/>
 								) : (
 									<ReactMarkdown>
-										{message.content ||
+										{body ||
 											(isLoading && index === messages.length - 1
 												? 'Thinking...'
-												: message.content)}
+												: body)}
 									</ReactMarkdown>
 								)}
 							</div>
-						) : (
+							{sources && message.id !== typingMessageId && (
+								<SourcesBlock markdown={sources} />
+							)}
+						</>
+						);
+					})() : (
 							<p className="whitespace-pre-wrap">{message.content}</p>
 						)}
 					</div>
@@ -128,13 +159,13 @@ export default function ChatMessages({
 
 		<button
 			onClick={smoothScrollToBottom}
-			className={`absolute bottom-3 left-1/2 -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-[#0d1520] hover:bg-[#162030] text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer ${
+			className={`absolute bottom-3 left-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center bg-[#4B9CD3] text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer ${
 				isAtBottom || messages.length === 0
 					? 'opacity-0 translate-y-2 pointer-events-none'
 					: 'opacity-100 translate-y-0'
 			}`}
 		>
-			<ArrowDown className="w-5 h-5" />
+			<ArrowDown className="w-6 h-6" />
 		</button>
 		</div>
 	);
