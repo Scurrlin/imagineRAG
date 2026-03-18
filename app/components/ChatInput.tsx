@@ -67,7 +67,7 @@ export default function ChatInput({
 						type="button"
 						onClick={handleSampleQuestion}
 						disabled={isLoading}
-						className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-2 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="h-10 flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-2 py-2 bg-[#4B9CD3] text-white text-sm font-medium rounded-lg hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<CircleHelp className="w-4 h-4" />
 						Sample Question
@@ -76,7 +76,7 @@ export default function ChatInput({
 						<button
 							type="button"
 							onClick={onToggleChat}
-							className="flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-2 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-lg hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
+							className="h-10 flex-1 sm:flex-initial flex items-center justify-center sm:justify-start gap-2 px-2 py-2 bg-white/10 text-white/80 text-sm font-medium rounded-lg hover:bg-white/15 hover:text-white transition-colors cursor-pointer"
 						>
 							<MessageSquare className="w-4 h-4" />
 							View Chat
@@ -87,7 +87,7 @@ export default function ChatInput({
 
 			<form
 				onSubmit={onSubmit}
-				className="flex flex-col sm:flex-row gap-3 sm:items-stretch"
+				className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 sm:items-stretch"
 			>
 				{/* Textarea */}
 				<div className="flex-1">
@@ -113,7 +113,7 @@ export default function ChatInput({
 					<button
 						type="submit"
 						disabled={isLoading || !input.trim()}
-						className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="flex-1 h-10 sm:h-auto flex items-center justify-center gap-2 px-5 py-2 sm:py-3 text-sm sm:text-base bg-[#4B9CD3] text-white rounded-xl font-medium hover:bg-[#3A8BC2] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<Send className="w-4 h-4" />
 						{isLoading ? 'Sending...' : 'Send'}
@@ -122,7 +122,7 @@ export default function ChatInput({
 						type="button"
 						onClick={onClear}
 						disabled={isLoading || !hasMessages}
-						className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-white/10 text-white/70 rounded-xl font-medium hover:bg-white/15 hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+						className="flex-1 h-10 sm:h-auto flex items-center justify-center gap-2 px-5 py-2 sm:py-3 text-sm sm:text-base bg-white/10 text-white/70 rounded-xl font-medium hover:bg-white/15 hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 					>
 						<Trash2 className="w-4 h-4" />
 						Clear

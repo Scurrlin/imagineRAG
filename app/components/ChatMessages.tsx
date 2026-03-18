@@ -1,8 +1,72 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { ChevronDown } from 'lucide-react';
 import { Message } from './types';
+
+function useStreamingText(content: string, isStreaming: boolean): string {
+	const [displayedContent, setDisplayedContent] = useState(content);
+	const targetRef = useRef(content);
+	const displayedLengthRef = useRef(content.length);
+	const rafRef = useRef<number | null>(null);
+
+	targetRef.current = content;
+
+	useEffect(() => {
+		if (!isStreaming) {
+			displayedLengthRef.current = content.length;
+			setDisplayedContent(content);
+		}
+	}, [isStreaming, content]);
+
+	useEffect(() => {
+		if (!isStreaming) {
+			if (rafRef.current !== null) {
+				cancelAnimationFrame(rafRef.current);
+				rafRef.current = null;
+			}
+			return;
+		}
+
+		const animate = () => {
+			const target = targetRef.current;
+			const currentLen = displayedLengthRef.current;
+			const gap = target.length - currentLen;
+
+			if (gap > 0) {
+				const charsToAdd = gap > 80 ? Math.ceil(gap * 0.1) : 3;
+				const nextLen = Math.min(currentLen + charsToAdd, target.length);
+				displayedLengthRef.current = nextLen;
+				setDisplayedContent(target.slice(0, nextLen));
+			}
+
+			rafRef.current = requestAnimationFrame(animate);
+		};
+
+		rafRef.current = requestAnimationFrame(animate);
+
+		return () => {
+			if (rafRef.current !== null) {
+				cancelAnimationFrame(rafRef.current);
+				rafRef.current = null;
+			}
+		};
+	}, [isStreaming]);
+
+	return displayedContent;
+}
+
+function StreamingMessage({
+	content,
+	isStreaming,
+}: {
+	content: string;
+	isStreaming: boolean;
+}) {
+	const displayedContent = useStreamingText(content, isStreaming);
+	return <ReactMarkdown>{displayedContent || 'Thinking...'}</ReactMarkdown>;
+}
 
 interface ChatMessagesProps {
 	messages: Message[];
@@ -14,17 +78,63 @@ export default function ChatMessages({
 	isLoading,
 }: ChatMessagesProps) {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const isNearBottomRef = useRef(true);
+	const [showJumpButton, setShowJumpButton] = useState(false);
 
-	// Scroll to bottom only when a new message is added (not on content updates from streaming)
+	const handleScroll = useCallback(() => {
+		const el = containerRef.current;
+		if (!el) return;
+		const atBottom =
+			el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+		isNearBottomRef.current = atBottom;
+		if (atBottom) {
+			setShowJumpButton(false);
+		} else if (isLoading) {
+			setShowJumpButton(true);
+		}
+	}, [isLoading]);
+
+	const scrollToBottom = useCallback(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+		isNearBottomRef.current = true;
+		setShowJumpButton(false);
+	}, []);
+
 	useEffect(() => {
 		if (messages.length > 0) {
-			messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+			const lastMsg = messages[messages.length - 1];
+			if (lastMsg.role === 'user' || isNearBottomRef.current) {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: 'smooth',
+				});
+				isNearBottomRef.current = true;
+			}
 		}
 	}, [messages.length]);
 
+	useEffect(() => {
+		if (!isLoading) {
+			setShowJumpButton(false);
+			return;
+		}
+		const interval = setInterval(() => {
+			if (isNearBottomRef.current) {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: 'smooth',
+				});
+			}
+		}, 300);
+		return () => clearInterval(interval);
+	}, [isLoading]);
+
 	return (
-		<div className="chat-panel-messages overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
-			{messages.map((message) => (
+		<div
+			ref={containerRef}
+			onScroll={handleScroll}
+			className="chat-panel-messages relative overflow-y-auto px-4 sm:px-6 py-4 space-y-4"
+		>
+			{messages.map((message, index) => (
 				<div
 					key={message.id}
 					className={`flex ${
@@ -40,9 +150,13 @@ export default function ChatMessages({
 					>
 						{message.role === 'assistant' ? (
 							<div className="prose prose-sm max-w-none">
-								<ReactMarkdown>
-									{message.content || 'Thinking...'}
-								</ReactMarkdown>
+								<StreamingMessage
+									content={message.content}
+									isStreaming={
+										isLoading &&
+										index === messages.length - 1
+									}
+								/>
 							</div>
 						) : (
 							<p className="whitespace-pre-wrap">{message.content}</p>
@@ -71,6 +185,19 @@ export default function ChatMessages({
 			)}
 
 			<div ref={messagesEndRef} />
+
+			{showJumpButton && (
+				<button
+					onClick={scrollToBottom}
+					className="sticky bottom-2 left-1/2 -translate-x-1/2 z-10
+						bg-[#4B9CD3]/90 backdrop-blur text-white text-xs
+						px-3 py-1.5 rounded-full flex items-center gap-1
+						shadow-lg hover:bg-[#4B9CD3] transition-colors"
+				>
+					<ChevronDown size={14} />
+					New message
+				</button>
+			)}
 		</div>
 	);
 }
