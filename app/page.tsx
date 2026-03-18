@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowDown } from 'lucide-react';
 import { Message } from './components/types';
 import Hero from './components/Hero';
-import ChatMessages from './components/ChatMessages';
+import ChatMessages, { ChatMessagesHandle } from './components/ChatMessages';
 import ChatInput from './components/ChatInput';
 
 export default function Home() {
@@ -15,6 +15,8 @@ export default function Home() {
 	const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
 
 	const abortControllerRef = useRef<AbortController | null>(null);
+	const chatMessagesRef = useRef<ChatMessagesHandle>(null);
+	const [isAtBottom, setIsAtBottom] = useState(true);
 
 	const handleClear = () => {
 		if (abortControllerRef.current) {
@@ -202,11 +204,23 @@ export default function Home() {
 			    ============================================ */}
 			{chatOpen && (
 				<div className="chat-panel animate-slide-up">
-					{/* Panel header */}
-					<div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/10">
-						<h3 className="text-white/80 text-sm font-medium">
-							Imagine Digital Consultant
-						</h3>
+				{/* Panel header */}
+				<div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/10">
+					<h3 className="text-white/80 text-sm font-medium">
+						Imagine Digital Consultant
+					</h3>
+					<div className="flex items-center gap-2">
+						<button
+							onClick={() => chatMessagesRef.current?.smoothScrollToBottom()}
+							className={`w-8 h-8 flex items-center justify-center rounded-full bg-[#4B9CD3] text-white transition-all duration-200 cursor-pointer ${
+								isAtBottom || messages.length === 0
+									? 'opacity-0 scale-75 pointer-events-none'
+									: 'opacity-100 scale-100'
+							}`}
+							aria-label="Scroll to bottom"
+						>
+							<ArrowDown className="w-4 h-4" />
+						</button>
 						<button
 							onClick={handleToggleChat}
 							className="w-8 h-8 flex items-center justify-center rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
@@ -215,14 +229,17 @@ export default function Home() {
 							<ChevronDown className="w-5 h-5" />
 						</button>
 					</div>
+				</div>
 
-					{/* Messages */}
-					<ChatMessages
-						messages={messages}
-						isLoading={isLoading}
-						typingMessageId={typingMessageId}
-						onTypewriterComplete={handleTypewriterComplete}
-					/>
+				{/* Messages */}
+				<ChatMessages
+					ref={chatMessagesRef}
+					messages={messages}
+					isLoading={isLoading}
+					typingMessageId={typingMessageId}
+					onTypewriterComplete={handleTypewriterComplete}
+					onScrollStateChange={setIsAtBottom}
+				/>
 
 					{/* Input inside panel */}
 					<ChatInput

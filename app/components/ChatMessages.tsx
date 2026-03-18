@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, useImperativeHandle, forwardRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ArrowDown, BookOpen } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { Message } from './types';
 
 const TYPEWRITER_SPEED_MS = 30;
@@ -64,19 +64,25 @@ function TypewriterText({ text, onComplete, onWordReveal }: { text: string; onCo
 	return <ReactMarkdown>{displayed}</ReactMarkdown>;
 }
 
+export interface ChatMessagesHandle {
+	smoothScrollToBottom: () => void;
+}
+
 interface ChatMessagesProps {
 	messages: Message[];
 	isLoading: boolean;
 	typingMessageId: string | null;
 	onTypewriterComplete: () => void;
+	onScrollStateChange?: (isAtBottom: boolean) => void;
 }
 
-export default function ChatMessages({
+const ChatMessages = forwardRef<ChatMessagesHandle, ChatMessagesProps>(function ChatMessages({
 	messages,
 	isLoading,
 	typingMessageId,
 	onTypewriterComplete,
-}: ChatMessagesProps) {
+	onScrollStateChange,
+}, ref) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isAtBottom, setIsAtBottom] = useState(true);
 
@@ -91,8 +97,12 @@ export default function ChatMessages({
 	const handleScroll = useCallback(() => {
 		const el = containerRef.current;
 		if (!el) return;
-		setIsAtBottom(el.scrollTop + el.clientHeight >= el.scrollHeight - 50);
-	}, []);
+		const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 50;
+		setIsAtBottom(atBottom);
+		onScrollStateChange?.(atBottom);
+	}, [onScrollStateChange]);
+
+	useImperativeHandle(ref, () => ({ smoothScrollToBottom }), [smoothScrollToBottom]);
 
 	useEffect(() => {
 		if (isLoading || typingMessageId) {
@@ -167,17 +177,8 @@ export default function ChatMessages({
 				</div>
 			)}
 		</div>
-
-		<button
-			onClick={smoothScrollToBottom}
-			className={`absolute bottom-3 right-[3.75%] translate-x-1/2 w-10 h-10 flex items-center justify-center bg-[#4B9CD3] text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer ${
-				isAtBottom || messages.length === 0
-					? 'opacity-0 translate-y-2 pointer-events-none'
-					: 'opacity-100 translate-y-0'
-			}`}
-		>
-			<ArrowDown className="w-6 h-6" />
-		</button>
 		</div>
 	);
-}
+});
+
+export default ChatMessages;
