@@ -219,7 +219,7 @@ export default function Home() {
 							}`}
 							aria-label="Scroll to bottom"
 						>
-							<ArrowDown className="w-4 h-4" />
+							<ArrowDown className="w-6 h-6" />
 						</button>
 						<button
 							onClick={handleToggleChat}
