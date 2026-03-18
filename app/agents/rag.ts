@@ -159,7 +159,7 @@ Use numbered inline citations like [1], [2] in the body of your response when re
 1. *[Case Study] Title* -- Client Name
 2. *[White Paper] Parent Title* -- Section Title
 
-Keep citation numbers consistent between the inline references and the numbered list. Only list documents you actually cited. Use the metadata from the retrieved documents for accurate titles and names.
+ALWAYS number citations, even when there is only one source. Keep citation numbers consistent between the inline references and the numbered list. Only list documents you actually cited. Use the metadata from the retrieved documents for accurate titles and names.
 
 ## Important Rules
 - NEVER make up case studies or capabilities not supported by the retrieved documents
