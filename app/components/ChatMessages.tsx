@@ -159,7 +159,7 @@ export default function ChatMessages({
 
 		<button
 			onClick={smoothScrollToBottom}
-			className={`absolute bottom-3 left-1/2 -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-[#4B9CD3] text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer ${
+			className={`absolute bottom-3 right-[3.75%] translate-x-1/2 w-10 h-10 flex items-center justify-center bg-[#4B9CD3] text-white rounded-full shadow-lg transition-all duration-200 cursor-pointer ${
 				isAtBottom || messages.length === 0
 					? 'opacity-0 translate-y-2 pointer-events-none'
 					: 'opacity-100 translate-y-0'
