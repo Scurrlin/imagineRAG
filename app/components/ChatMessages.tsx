@@ -1,15 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { ArrowDown } from 'lucide-react';
 import { Message } from './types';
 
 const TYPEWRITER_SPEED_MS = 30;
 
-function TypewriterText({ text, onComplete }: { text: string; onComplete: () => void }) {
+function TypewriterText({ text, onComplete, onWordReveal }: { text: string; onComplete: () => void; onWordReveal: () => void }) {
 	const [wordCount, setWordCount] = useState(0);
 	const onCompleteRef = useRef(onComplete);
 	onCompleteRef.current = onComplete;
+	const onWordRevealRef = useRef(onWordReveal);
+	onWordRevealRef.current = onWordReveal;
 	const words = useMemo(() => text.match(/\S+\s*/g) || [], [text]);
 
 	useEffect(() => {
@@ -17,6 +20,7 @@ function TypewriterText({ text, onComplete }: { text: string; onComplete: () => 
 			onCompleteRef.current();
 			return;
 		}
+		onWordRevealRef.current();
 		const timer = setTimeout(() => setWordCount((c) => c + 1), TYPEWRITER_SPEED_MS);
 		return () => clearTimeout(timer);
 	}, [wordCount, words.length]);
@@ -39,8 +43,32 @@ export default function ChatMessages({
 	typingMessageId,
 	onTypewriterComplete,
 }: ChatMessagesProps) {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [isAtBottom, setIsAtBottom] = useState(true);
+
+	const scrollToBottom = useCallback(() => {
+		containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight });
+	}, []);
+
+	const smoothScrollToBottom = useCallback(() => {
+		containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: 'smooth' });
+	}, []);
+
+	const handleScroll = useCallback(() => {
+		const el = containerRef.current;
+		if (!el) return;
+		setIsAtBottom(el.scrollTop + el.clientHeight >= el.scrollHeight - 50);
+	}, []);
+
+	useEffect(() => {
+		if (isLoading || typingMessageId) {
+			scrollToBottom();
+		}
+	}, [messages, isLoading, typingMessageId, scrollToBottom]);
+
 	return (
-		<div className="chat-panel-messages relative overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
+		<div className="chat-panel-messages relative">
+		<div ref={containerRef} onScroll={handleScroll} className="h-full overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
 			{messages.map((message, index) => (
 				<div
 					key={message.id}
@@ -58,10 +86,11 @@ export default function ChatMessages({
 						{message.role === 'assistant' ? (
 							<div className="prose prose-sm max-w-none">
 								{message.id === typingMessageId ? (
-									<TypewriterText
-										text={message.content}
-										onComplete={onTypewriterComplete}
-									/>
+								<TypewriterText
+									text={message.content}
+									onComplete={onTypewriterComplete}
+									onWordReveal={scrollToBottom}
+								/>
 								) : (
 									<ReactMarkdown>
 										{message.content ||
@@ -95,6 +124,19 @@ export default function ChatMessages({
 					</div>
 				</div>
 			)}
+		</div>
+
+		<button
+			onClick={smoothScrollToBottom}
+			className={`absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-white/15 hover:bg-white/25 text-white/90 text-xs rounded-full backdrop-blur-sm transition-all duration-200 cursor-pointer ${
+				isAtBottom || messages.length === 0
+					? 'opacity-0 translate-y-2 pointer-events-none'
+					: 'opacity-100 translate-y-0'
+			}`}
+		>
+			↓ Latest
+			<ArrowDown className="w-3 h-3" />
+		</button>
 		</div>
 	);
 }
