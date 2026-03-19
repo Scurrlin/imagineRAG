@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { BookOpen } from 'lucide-react';
 import { Message } from './types';
 
-const TYPEWRITER_SPEED_MS = 30;
+const TYPEWRITER_SPEED_MS = 120;
 const SOURCES_DELIMITER = /\n---\n\*\*Sources:\*\*/;
 
 function splitSources(content: string): { body: string; sources: string | null } {
