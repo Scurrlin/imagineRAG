@@ -25,11 +25,12 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 
 			<div className="relative z-10 h-full flex flex-col">
 				<nav className="relative flex items-center justify-between px-6 sm:px-10 lg:px-16 py-5">
-					<a
-						href={EXTERNAL_LINKS.HOME_PAGE}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
+				<a
+					href={EXTERNAL_LINKS.HOME_PAGE}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="outline-none focus-visible:outline-2 focus-visible:outline-white"
+				>
 						<Image
 							src="/imagine_logo.svg"
 							alt="ImagineSoftware"
