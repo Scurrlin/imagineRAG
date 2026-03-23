@@ -10,7 +10,7 @@
  *   if (!success) return new Response('Too many requests', { status: 429 });
  */
 
-import { RATE_LIMIT_CONFIG } from '@/app/config';
+import { RATE_LIMIT_CONFIG, DAILY_LIMIT_CONFIG } from '@/app/config';
 
 interface RateLimitEntry {
 	count: number;
@@ -91,10 +91,15 @@ class RateLimiter {
 	}
 }
 
-// Singleton instance
+// Singleton instances
 export const rateLimiter = new RateLimiter(
 	RATE_LIMIT_CONFIG.MAX_REQUESTS,
 	RATE_LIMIT_CONFIG.WINDOW_MS
+);
+
+export const dailyLimiter = new RateLimiter(
+	DAILY_LIMIT_CONFIG.MAX_MESSAGES,
+	DAILY_LIMIT_CONFIG.WINDOW_MS
 );
 
 /**
@@ -126,6 +131,18 @@ export function rateLimitHeaders(result: RateLimitResult): HeadersInit {
 		'X-RateLimit-Limit': result.limit.toString(),
 		'X-RateLimit-Remaining': result.remaining.toString(),
 		'X-RateLimit-Reset': result.reset.toString(),
+		...(result.success ? {} : { 'Retry-After': Math.ceil((result.reset - Date.now()) / 1000).toString() }),
+	};
+}
+
+/**
+ * Create daily limit headers for response
+ */
+export function dailyLimitHeaders(result: RateLimitResult): HeadersInit {
+	return {
+		'X-DailyLimit-Limit': result.limit.toString(),
+		'X-DailyLimit-Remaining': result.remaining.toString(),
+		'X-DailyLimit-Reset': result.reset.toString(),
 		...(result.success ? {} : { 'Retry-After': Math.ceil((result.reset - Date.now()) / 1000).toString() }),
 	};
 }

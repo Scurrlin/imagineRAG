@@ -116,9 +116,13 @@ export default function Home() {
 			if (abortController.signal.aborted) return;
 
 			if (!response.ok) {
-				const errorMsg = response.status === 429
-					? 'You\'re sending messages too quickly. Please wait a moment and try again.'
-					: 'Sorry, I encountered an error. Please try again.';
+				let errorMsg = 'Sorry, I encountered an error. Please try again.';
+				if (response.status === 429) {
+					const errorData = await response.json().catch(() => null);
+					errorMsg = errorData?.error === 'daily_limit'
+						? "You've reached your daily limit of 100 messages. Please try again tomorrow."
+						: "You're sending messages too quickly. Please wait a moment and try again.";
+				}
 				throw new Error(errorMsg);
 			}
 

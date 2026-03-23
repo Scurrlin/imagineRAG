@@ -80,6 +80,11 @@ export const RATE_LIMIT_CONFIG = {
 	WINDOW_MS: 60 * 1000,
 } as const;
 
+export const DAILY_LIMIT_CONFIG = {
+	MAX_MESSAGES: 100,
+	WINDOW_MS: 24 * 60 * 60 * 1000,
+} as const;
+
 // =============================================================================
 // Chat Config
 // =============================================================================

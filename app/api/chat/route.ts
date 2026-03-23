@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ragAgent } from '@/app/agents/rag';
-import { rateLimiter, getClientIp, rateLimitHeaders } from '@/app/libs/rate-limit';
+import { rateLimiter, dailyLimiter, getClientIp, rateLimitHeaders, dailyLimitHeaders } from '@/app/libs/rate-limit';
 import { CHAT_CONFIG } from '@/app/config';
 
 const chatSchema = z.object({
@@ -24,6 +24,24 @@ export async function POST(req: Request) {
 			status: 429,
 			headers: rateLimitHeaders(rateLimit),
 		});
+	}
+
+	const dailyLimit = dailyLimiter.check(clientIp);
+	if (!dailyLimit.success) {
+		return new Response(
+			JSON.stringify({
+				error: 'daily_limit',
+				message: "You've reached your daily limit of 100 messages. Please try again tomorrow.",
+				reset: dailyLimit.reset,
+			}),
+			{
+				status: 429,
+				headers: {
+					'Content-Type': 'application/json',
+					...dailyLimitHeaders(dailyLimit),
+				},
+			}
+		);
 	}
 
 	try {
