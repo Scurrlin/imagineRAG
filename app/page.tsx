@@ -64,46 +64,54 @@ export default function Home() {
 
 		let startedTypewriter = false;
 
+		const isTestCommand = [
+			'rate limit burst protection msg test',
+			'max daily limit protection msg test',
+		].includes(userInput.trim().toLowerCase());
+
 		try {
-			// Step 1: Check guardrail
-			const guardrailResponse = await fetch('/api/guardrail', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					messages: [{ role: 'user', content: userInput }],
-				}),
-				signal: abortController.signal,
-			});
+			// Skip guardrail for test commands
+			if (!isTestCommand) {
+				// Step 1: Check guardrail
+				const guardrailResponse = await fetch('/api/guardrail', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						messages: [{ role: 'user', content: userInput }],
+					}),
+					signal: abortController.signal,
+				});
 
-			if (abortController.signal.aborted) return;
+				if (abortController.signal.aborted) return;
 
-			if (!guardrailResponse.ok) {
-				const errorMsg = guardrailResponse.status === 429
-					? 'You\'re sending messages too quickly. Please wait a moment and try again.'
-					: 'Sorry, I encountered an error. Please try again.';
-				setMessages((prev) => [
-					...prev,
-					{ id: crypto.randomUUID(), role: 'assistant', content: errorMsg },
-				]);
-				return;
+				if (!guardrailResponse.ok) {
+					const errorMsg = guardrailResponse.status === 429
+						? 'You\'re sending messages too quickly. Please wait a moment and try again.'
+						: 'Sorry, I encountered an error. Please try again.';
+					setMessages((prev) => [
+						...prev,
+						{ id: crypto.randomUUID(), role: 'assistant', content: errorMsg },
+					]);
+					return;
+				}
+
+				const guardrailResult = await guardrailResponse.json();
+
+				if (!guardrailResult.accepted) {
+					setMessages((prev) => [
+						...prev,
+						{
+							id: crypto.randomUUID(),
+							role: 'assistant',
+							content: guardrailResult.clarification ||
+								'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges. What billing or RCM problem are you facing?',
+						},
+					]);
+					return;
+				}
 			}
 
-			const guardrailResult = await guardrailResponse.json();
-
-			if (!guardrailResult.accepted) {
-				setMessages((prev) => [
-					...prev,
-					{
-						id: crypto.randomUUID(),
-						role: 'assistant',
-						content: guardrailResult.clarification ||
-							'I can help you understand how ImagineSoftware addresses healthcare revenue cycle challenges. What billing or RCM problem are you facing?',
-					},
-				]);
-				return;
-			}
-
-			// Step 2: Query accepted - call chat API
+			// Step 2: Query accepted (or test command) - call chat API
 			const response = await fetch('/api/chat', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

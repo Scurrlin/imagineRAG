@@ -53,6 +53,23 @@ export async function POST(req: Request) {
 		const lastUserMessage = messages.filter((m) => m.role === 'user').pop();
 		const query = lastUserMessage?.content || '';
 
+		const testCommands: Record<string, string> = {
+			'rate limit burst protection msg test':
+				"You're sending messages too quickly. Please wait a moment and try again.",
+			'max daily limit protection msg test':
+				"You've reached your daily limit of 100 messages. Please try again tomorrow.",
+		};
+
+		const testResponse = testCommands[query.trim().toLowerCase()];
+		if (testResponse) {
+			return new Response(testResponse, {
+				headers: {
+					'Content-Type': 'text/plain',
+					...rateLimitHeaders(rateLimit),
+				},
+			});
+		}
+
 		// Execute the RAG agent and get streamed response
 		const result = await ragAgent({ query });
 
