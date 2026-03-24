@@ -15,7 +15,7 @@ export default function Hero({ children }: { children?: React.ReactNode }) {
 				className="hero-video"
 			>
 				<source
-					src="/imagineteam-compressed.mp4"
+					src="/imagine.mp4"
 					type="video/mp4"
 				/>
 			</video>
