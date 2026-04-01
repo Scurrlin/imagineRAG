@@ -10,14 +10,10 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "jest",
-		"upload-documents": "npx ts-node app/scripts/upload-documents.ts",
-		"prepare": "husky"
-	},
-	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": [
-			"eslint --fix"
-		]
+		"test": "jest --runInBand --forceExit",
+		"test:watch": "jest --watch",
+		"test:ci": "JEST_JUNIT_OUTPUT_DIR=reports/jest jest --runInBand --forceExit --ci --reporters=default --reporters=jest-junit",
+		"upload-documents": "npx ts-node app/scripts/upload-documents.ts"
 	},
 	"dependencies": {
 		"@ai-sdk/openai": "^3.0.25",
@@ -26,7 +22,6 @@
 		"ai": "^6.0.67",
 		"cohere-ai": "^7.17.1",
 		"dotenv": "^17.2.3",
-		"husky": "^9.1.7",
 		"lucide-react": "^0.514.0",
 		"next": "15.5.13",
 		"openai": "5.15.0",
@@ -46,7 +41,7 @@
 		"eslint-config-next": "^15.5.13",
 		"jest": "30.0.0",
 		"jest-environment-jsdom": "30.0.0",
-		"lint-staged": "^16.0.0",
+		"jest-junit": "^16.0.0",
 		"postcss": "^8",
 		"tailwindcss": "^4.1.10",
 		"ts-jest": "^29.1.2",

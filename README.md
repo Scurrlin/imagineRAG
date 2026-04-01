@@ -12,8 +12,6 @@ A RAG-powered chat interface designed to simulate an initial consultation with I
 - **Two-Layer Guardrails** - LLM classification + embedding similarity to keep queries on-topic
 - **Cohere Re-ranking** - Retrieves candidates then re-ranks for the top 6 most relevant documents
 - **Streaming Responses** - Real-time response streaming via fetch with ReadableStream
-- **Hero Video Background** - Responsive auto-playing video backgrounds matching the ImagineSoftware site (mobile, tablet, desktop variants)
-- **Responsive Design** - Optimized layouts for mobile, tablet, and desktop with a 1400px breakpoint
 - **Call-to-Action Links** - Direct links to ImagineSoftware home page and contact pages
 
 ## Tech Stack
@@ -128,6 +126,11 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ```
 app/
+├── __tests__/
+│   ├── guardrail.test.ts       # Guardrail route tests (mocked OpenAI)
+│   ├── rag.test.ts             # RAG agent tests (mocked Qdrant/Cohere/OpenAI)
+│   ├── rate-limit.test.ts      # Rate limiter and IP extraction tests
+│   └── utils.test.ts           # cosineSimilarity unit tests
 ├── agents/
 │   ├── rag.ts                  # Main RAG agent with retrieval tool
 │   └── types.ts                # TypeScript types for documents
@@ -185,17 +188,30 @@ All configuration is centralized in `app/config.ts`:
 - Maximum 400 characters per message
 - Character counter appears at 320+ characters
 
-## Responsive Design
+## Testing
 
-The app is fully responsive across all screen sizes, with tailored layouts at three breakpoints:
+Tests live in `app/__tests__/` and mock all external services (OpenAI, Qdrant, Cohere) so nothing hits a real API.
 
-- **Mobile (<768px)** - Portrait-optimized video background, stacked layout with centered hero text and full-width chat input
-- **Tablet (768px - 1399px)** - Mid-resolution video, horizontal nav with centered "Digital Consultant" title
-- **Desktop (1400px+)** - Full 1920x1080 hero video, left-aligned headline with flex-grow layout
+```bash
+npm test              # run all tests
+npm run test:watch    # watch mode
+npm run test:ci       # CI mode with JUnit XML output (for AWS CodeBuild)
+```
+
+**Test files:**
+
+| File | What it covers |
+|------|----------------|
+| `utils.test.ts` | `cosineSimilarity` — pure math, no mocks |
+| `rate-limit.test.ts` | Rate limiter logic, IP extraction, header formatting |
+| `rag.test.ts` | RAG agent retrieval tool and orchestration (mocked Qdrant/Cohere/OpenAI) |
+| `guardrail.test.ts` | Guardrail route two-layer classification (mocked OpenAI) |
+
+### AWS CodeBuild
+
+A `buildspec.yml` at the project root runs the test suite in CodeBuild's free tier. It installs dependencies, runs `test:ci`, and collects a JUnit XML report at `reports/jest/junit.xml`.
 
 ### Minimum Height Protection
-
-![height_protection](public/troll_protection.png)
 
 At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behavior. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
 

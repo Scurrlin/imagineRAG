@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm ci
+  build:
+    commands:
+      - mkdir -p reports/jest
+      - npm run test:ci
+
+reports:
+  consultant-jest:
+    files:
+      - reports/jest/junit.xml
+    file-format: JUNITXML
