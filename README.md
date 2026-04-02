@@ -10,7 +10,7 @@ A RAG-powered chat interface designed to simulate an initial consultation with I
 
 - **Stateless Chat Interface** - Clean, single-turn Q&A with 400 character limit
 - **Two-Layer Guardrails** - LLM classification + embedding similarity to keep queries on-topic
-- **Cohere Re-ranking** - Retrieves candidates then re-ranks for the top 6 most relevant documents
+- **Cohere Re-ranking** - Retrieves candidates then re-ranks to the top 1 case study + top 5 white paper chunks
 - **Streaming Responses** - Real-time response streaming via fetch with ReadableStream
 - **Call-to-Action Links** - Direct links to ImagineSoftware home page and contact pages
 
@@ -38,10 +38,13 @@ npm install
 Create a `.env` file with your API keys (do not include quotes in values):
 
 ```bash
+# Required
 OPENAI_API_KEY=your_openai_api_key
 QDRANT_URL=your_qdrant_cluster_url
 QDRANT_API_KEY=your_qdrant_api_key
 COHERE_RERANK_API=your_cohere_api_key
+
+# Optional
 HELICONE_API_KEY=your_helicone_api_key
 ```
 
@@ -50,7 +53,9 @@ Required keys:
 - `QDRANT_URL` - Your Qdrant cluster URL
 - `QDRANT_API_KEY` - Your Qdrant API key
 - `COHERE_RERANK_API` - For re-ranking search results
-- `HELICONE_API_KEY` - For API observability (optional but recommended)
+
+Optional:
+- `HELICONE_API_KEY` - For API observability via Helicone proxy
 
 ### 3. Prepare Your Documents
 
@@ -128,6 +133,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 app/
 ├── __tests__/
 │   ├── guardrail.test.ts       # Guardrail route tests (mocked OpenAI)
+│   ├── prompt-injection.test.ts # Prompt injection defense tests
 │   ├── rag.test.ts             # RAG agent tests (mocked Qdrant/Cohere/OpenAI)
 │   ├── rate-limit.test.ts      # Rate limiter and IP extraction tests
 │   └── utils.test.ts           # cosineSimilarity unit tests
@@ -181,6 +187,7 @@ All configuration is centralized in `app/config.ts`:
 
 **Rate Limiting:**
 - 20 requests per minute per IP address
+- 100 messages per 24 hours across all users (chat endpoint only)
 - Returns 429 with `Retry-After` header when exceeded
 - Includes `X-RateLimit-*` headers in all responses
 
@@ -206,6 +213,7 @@ npm run test:ci       # CI mode with JUnit XML output (for AWS CodeBuild)
 | `rate-limit.test.ts` | Rate limiter logic, IP extraction, header formatting |
 | `rag.test.ts` | RAG agent retrieval tool and orchestration (mocked Qdrant/Cohere/OpenAI) |
 | `guardrail.test.ts` | Guardrail route two-layer classification (mocked OpenAI) |
+| `prompt-injection.test.ts` | RAG agent prompt injection defenses (poisoned document containment, structural safeguards) |
 
 ### AWS CodeBuild
 
@@ -214,24 +222,3 @@ A `buildspec.yml` at the project root runs the test suite in CodeBuild's free ti
 ### Minimum Height Protection
 
 At viewport heights below 500px, the app displays a branded fallback screen prompting the user to increase their screen height. This is primarily to ensure the user has a better experience, but it also prevents any potentially malicious behavior. For example, if someone shrinks their browser window to take a misleading screenshot of a broken layout, the app simply won't render.
-
-## Cursor Rules for Learning RAG
-
-For those learning RAG for the first time, consider adding a general rules `.mdc` file in `.cursorrules/` like the one below. This gives your AI assistant project-specific context so it can guide you more effectively as you build:
-
-```
-When creating a new API route always use typedRoute
-[typedRoute.ts](mdc:app/api/typedRoute.ts)
-To call this route use fetchApiRoute [client.ts](mdc:app/libs/api/client.ts)
-
-Project structure:
-app/components - shared components that are shared between pages
-app/libs - 3rd party library
-app/scripts - one off scripts to run outside the app
-app/services - services we can call from API routes
-
-This project is to teach early career devs about RAG so leave comments on certain
-features like using Pinecone or AI specific stuff so they can learn.
-```
-
-This helps the AI understand your project layout, enforce patterns like typed routes, and reminds it to leave more detailed comments on RAG-specific code.

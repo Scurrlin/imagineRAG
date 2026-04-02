@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 		});
 	}
 
-	const dailyLimit = dailyLimiter.check(clientIp);
+	const dailyLimit = dailyLimiter.check('global');
 	if (!dailyLimit.success) {
 		return new Response(
 			JSON.stringify({
