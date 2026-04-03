@@ -10,7 +10,7 @@ A RAG-powered chat interface designed to simulate an initial consultation with I
 
 - **Stateless Chat Interface** - Clean, single-turn Q&A with 400 character limit
 - **Two-Layer Guardrails** - LLM classification + embedding similarity to keep queries on-topic
-- **Cohere Re-ranking** - Retrieves candidates then re-ranks to the top 1 case study + top 5 white paper chunks
+- **Cohere Re-ranking** - Retrieves candidates then re-ranks to the best case study + top 5 white paper chunks
 - **Streaming Responses** - Real-time response streaming via fetch with ReadableStream
 - **Call-to-Action Links** - Direct links to ImagineSoftware home page and contact pages
 
